@@ -1,0 +1,7 @@
+﻿services:
+  apibozzi:
+    image: apibozzi
+    build:
+      context: .
+      dockerfile: Dockerfile
+
