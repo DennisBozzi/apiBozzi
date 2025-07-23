@@ -1,6 +1,0 @@
-@apiBozzi_HostAddress = http://localhost:5255
-
-GET {{apiBozzi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
