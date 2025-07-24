@@ -14,10 +14,6 @@ public static class ServiceConfiguration
         
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
-
-        // services.AddScoped<IAuthInterface, AuthService>();
-        // services.AddScoped<IProdutoInterface, ProdutoService>();
-        // services.AddScoped<IVendaInterface, VendaService>();
         
         services.AddCors(options =>
         {
