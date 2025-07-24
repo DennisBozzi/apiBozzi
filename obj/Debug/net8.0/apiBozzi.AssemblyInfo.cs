@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("apiBozzi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+906bcdd8b61456bb5c4d53cd9a3c1275e7a53e98")]
 [assembly: System.Reflection.AssemblyProductAttribute("apiBozzi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("apiBozzi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
