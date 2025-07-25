@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/Services/FirebaseService.cs">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/Services/FirebaseService.cs" />
+              <option name="originalContent" value="namespace apiBozzi.Services;&#10;&#10;public class FirebaseService&#10;{&#10;    private readonly HttpClient _httpClient;&#10;}" />
+              <option name="updatedContent" value="namespace apiBozzi.Services;&#10;&#10;public class FirebaseService&#10;{&#10;    private readonly HttpClient _httpClient;&#10;&#10;    public FirebaseService(HttpClient httpClient)&#10;    {&#10;        _httpClient = httpClient;&#10;    }&#10;&#10;    public async Task&lt;string&gt; LoginAsync(string email, string password, string apiKey)&#10;    {&#10;        var url = $&quot;https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={apiKey}&quot;;&#10;        var payload = new&#10;        {&#10;            email = email,&#10;            password = password,&#10;            returnSecureToken = true&#10;        };&#10;        var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, &quot;application/json&quot;);&#10;        var response = await _httpClient.PostAsync(url, content);&#10;        response.EnsureSuccessStatusCode();&#10;        var responseBody = await response.Content.ReadAsStringAsync();&#10;        return responseBody;&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
