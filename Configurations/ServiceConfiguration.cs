@@ -1,5 +1,6 @@
 ﻿using apiBozzi.Context;
 using apiBozzi.Services;
+using apiBozzi.Services.FelicianoBozzi;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,7 @@ public static class ServiceConfiguration
         });
         
         services.AddScoped<FirebaseService>();
+        services.AddScoped<ApartamentoService>();
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
