@@ -11,8 +11,6 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.MapGet("/clientes", () => "API is running.");
-
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -22,5 +20,7 @@ using (var scope = app.Services.CreateScope())
 app.ConfigureMiddlewares(app.Environment);
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.Run();

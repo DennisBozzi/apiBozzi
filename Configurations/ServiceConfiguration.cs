@@ -1,5 +1,10 @@
 ﻿using apiBozzi.Context;
+using apiBozzi.Services;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace apiBozzi.Configurations;
@@ -9,12 +14,22 @@ public static class ServiceConfiguration
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient<string>();
-        
+
         var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        var firebaseValidIssuer = Environment.GetEnvironmentVariable("FIREBASE_VALID_ISSUER");
+        var firebaseAudience = Environment.GetEnvironmentVariable("FIREBASE_AUDIENCE");
+        var firebaseCredentials = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS");
+
+        FirebaseApp.Create(new AppOptions
+        {
+            Credential = GoogleCredential.FromJson(firebaseCredentials)
+        });
         
+        services.AddScoped<FirebaseService>();
+
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
-        
+
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAllOrigins",
@@ -25,16 +40,18 @@ public static class ServiceConfiguration
                         .AllowAnyMethod();
                 });
         });
-        
-        // services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-        // {
-        //     options.Authority = firebaseValidIssuer;
-        //     options.TokenValidationParameters = new TokenValidationParameters
-        //     {
-        //         ValidIssuer = firebaseValidIssuer,
-        //         ValidAudience = firebaseAudience,
-        //     };
-        // });
+
+        services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+        {
+            options.Authority = firebaseValidIssuer;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = firebaseValidIssuer,
+                ValidAudience = firebaseAudience,
+            };
+        });
+
+        services.AddHttpClient();
 
         services.AddControllers();
 
