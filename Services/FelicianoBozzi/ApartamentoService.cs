@@ -26,27 +26,27 @@ public class ApartamentoService
             var totalItens = await _context.Apartamentos.CountAsync();
 
             var apartamentos = await _context.Apartamentos
-                .Skip((apartamentoFiltro.Pagina - 1) * apartamentoFiltro.TamanhoPagina)
-                .Take(apartamentoFiltro.TamanhoPagina)
+                .Skip((apartamentoFiltro.Page - 1) * apartamentoFiltro.PageSize)
+                .Take(apartamentoFiltro.PageSize)
                 .OrderBy(x => x.Numero)
                 .ToListAsync();
 
             var resultado = new PagedResult<Apartamento>
             {
                 Items = apartamentos,
-                TotalItens = totalItens,
-                PaginaAtual = apartamentoFiltro.Pagina,
-                TamanhoPagina = apartamentoFiltro.TamanhoPagina,
-                TotalPaginas = (int)Math.Ceiling((double)totalItens / apartamentoFiltro.TamanhoPagina)
+                TotalItems = totalItens,
+                CurrentPage = apartamentoFiltro.Page,
+                PageSize = apartamentoFiltro.PageSize,
+                TotalPages = (int)Math.Ceiling((double)totalItens / apartamentoFiltro.PageSize)
             };
 
-            res.Objeto = resultado;
-            res.Mensagem = "Apartamentos obtidos com sucesso!";
+            res.Object = resultado;
+            res.Message = "Apartamentos obtidos com sucesso!";
         }
         catch (Exception e)
         {
-            res.Mensagem = e.Message;
-            res.Successo = false;
+            res.Message = e.Message;
+            res.Success = false;
         }
 
         return res;
@@ -72,13 +72,13 @@ public class ApartamentoService
             var ap = await _context.Apartamentos.AddAsync(newAp);
             await _context.SaveChangesAsync();
 
-            res.Objeto = ap.Entity;
-            res.Mensagem = "Apartamento cadastrado com sucesso!";
+            res.Object = ap.Entity;
+            res.Message = "Apartamento cadastrado com sucesso!";
         }
         catch (Exception e)
         {
-            res.Mensagem = e.Message;
-            res.Successo = false;
+            res.Message = e.Message;
+            res.Success = false;
         }
 
         return res;

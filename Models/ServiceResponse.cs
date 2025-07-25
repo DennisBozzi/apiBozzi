@@ -2,7 +2,7 @@
 
 public class ServiceResponse<T>
 {
-    public T? Objeto { get; set; }
-    public string Mensagem { get; set; } = string.Empty;
-    public bool Successo { get; set; } = true;
+    public T? Object { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public bool Success { get; set; } = true;
 }
