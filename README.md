@@ -1,6 +1,6 @@
 ﻿<h1 align="center"> apiBozzi </h1>
 
-### Ferramentas utilizadas
+### Ferramentas
 
 - .Net 8.0
 - Docker
