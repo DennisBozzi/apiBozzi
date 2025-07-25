@@ -1,6 +1,5 @@
 ﻿<h1 align="center"> apiBozzi </h1>
 
----
 ### Ferramentas utilizadas
 
 - .Net 8.0
