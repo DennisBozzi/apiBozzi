@@ -1,6 +1,7 @@
 ﻿using apiBozzi.Context;
 using apiBozzi.Services;
 using apiBozzi.Services.FelicianoBozzi;
+using apiBozzi.Services.Firebase;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,9 +26,14 @@ public static class ServiceConfiguration
         {
             Credential = GoogleCredential.FromJson(firebaseCredentials)
         });
-        
-        services.AddScoped<FirebaseService>();
-        services.AddScoped<ApartamentoService>();
+
+        var baseType = typeof(ServiceBase);
+        var serviceTypes = baseType.Assembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType))
+            .ToArray();
+
+        foreach (var type in serviceTypes)
+            services.AddScoped(type);
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));

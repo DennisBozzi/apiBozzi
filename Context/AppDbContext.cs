@@ -10,9 +10,6 @@ public class AppDbContext : DbContext
     }
 
     // Feliciano Bozzi
-    public DbSet<Inquilino> Inquilinos { get; set; }
-    public DbSet<Dependente> Dependentes { get; set; }
-    public DbSet<Apartamento> Apartamentos { get; set; }
-    public DbSet<InquilinoApartamento> InquilinosApartamentos { get; set; }
-    public DbSet<Pagamento> Pagamentos { get; set; }
+    public DbSet<Apartment> Apartments { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
 }

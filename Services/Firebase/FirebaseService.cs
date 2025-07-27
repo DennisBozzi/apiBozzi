@@ -1,10 +1,10 @@
 ﻿using apiBozzi.Models;
 
-namespace apiBozzi.Services;
+namespace apiBozzi.Services.Firebase;
 
-public class FirebaseService(HttpClient httpClient)
+public class FirebaseService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    public async Task<FirebaseLoginResponse> LoginAsync(string email, string password)
+    public async Task<FirebaseLoginResponse?> LoginAsync(string email, string password)
     {
         var url = Environment.GetEnvironmentVariable("FIREBASE_TOKEN_URI");
         var payload = new
@@ -17,7 +17,7 @@ public class FirebaseService(HttpClient httpClient)
         var content = new StringContent(
             System.Text.Json.JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
 
-        var response = await httpClient.PostAsync(url, content);
+        var response = await HttpClient.PostAsync(url, content);
         var responseBody = await response.Content.ReadFromJsonAsync<FirebaseLoginResponse>();
 
         return responseBody;

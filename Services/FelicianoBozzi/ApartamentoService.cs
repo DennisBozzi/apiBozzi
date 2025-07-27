@@ -8,30 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace apiBozzi.Services.FelicianoBozzi;
 
-public class ApartamentoService
+public class ApartamentoService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    private readonly AppDbContext _context;
-
-    public ApartamentoService(AppDbContext context)
+    public async Task<ServiceResponse<PagedResult<Apartment>>> ListerApartamentos(ApartamentoFiltro apartamentoFiltro)
     {
-        _context = context;
-    }
-
-    public async Task<ServiceResponse<PagedResult<Apartamento>>> ListerApartamentos(ApartamentoFiltro apartamentoFiltro)
-    {
-        var res = new ServiceResponse<PagedResult<Apartamento>>();
+        var res = new ServiceResponse<PagedResult<Apartment>>();
 
         try
         {
-            var totalItens = await _context.Apartamentos.CountAsync();
+            var totalItens = await Context.Apartments.CountAsync();
 
-            var apartamentos = await _context.Apartamentos
+            var apartamentos = await Context.Apartments
                 .Skip((apartamentoFiltro.Page - 1) * apartamentoFiltro.PageSize)
                 .Take(apartamentoFiltro.PageSize)
-                .OrderBy(x => x.Numero)
+                .OrderBy(x => x.Number)
                 .ToListAsync();
 
-            var resultado = new PagedResult<Apartamento>
+            var resultado = new PagedResult<Apartment>
             {
                 Items = apartamentos,
                 TotalItems = totalItens,
@@ -52,25 +45,25 @@ public class ApartamentoService
         return res;
     }
 
-    public async Task<ServiceResponse<Apartamento>> CriarApartamento(string numero, int andar, decimal valor)
+    public async Task<ServiceResponse<Apartment>> CriarApartamento(string numero, int andar, decimal valor)
     {
-        var res = new ServiceResponse<Apartamento>();
+        var res = new ServiceResponse<Apartment>();
 
         try
         {
-            var existeAp = _context.Apartamentos.Any(x => x.Numero.ToLower().Equals(numero.ToLower()));
+            var existeAp = Context.Apartments.Any(x => x.Number.ToLower().Equals(numero.ToLower()));
             if (existeAp)
                 throw new Exception("Já existe um apartamento com esse número.");
 
-            var newAp = new Apartamento
+            var newAp = new Apartment
             {
-                Numero = numero.ToUpper(),
-                Andar = (AndarEnum)andar,
-                ValorAluguel = valor
+                Number = numero.ToUpper(),
+                Floor = (FloorEnum)andar,
+                Rent = valor
             };
 
-            var ap = await _context.Apartamentos.AddAsync(newAp);
-            await _context.SaveChangesAsync();
+            var ap = await Context.Apartments.AddAsync(newAp);
+            await Context.SaveChangesAsync();
 
             res.Object = ap.Entity;
             res.Message = "Apartamento cadastrado com sucesso!";

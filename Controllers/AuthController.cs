@@ -1,5 +1,5 @@
 ﻿using apiBozzi.Models;
-using apiBozzi.Services;
+using apiBozzi.Services.Firebase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apiBozzi.Controllers;
@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Login")]
-    public async Task<FirebaseLoginResponse> Login(string email, string password)
+    public async Task<FirebaseLoginResponse?> Login(string email, string password)
     {
         return await _firebase.LoginAsync(email, password);
     }
