@@ -1,9 +1,11 @@
-﻿using apiBozzi.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using apiBozzi.Models;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Models.FelicianoBozzi;
 using apiBozzi.Services.FelicianoBozzi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace apiBozzi.Controllers.FelicianoBozzi;
 
@@ -20,8 +22,34 @@ public class TenantsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult ListTenants([FromQuery] NewTenant dto)
+    public async Task<IActionResult> AddTenant([FromBody] NewTenant dto)
     {
-        return Ok(_tenants.AddTenant(dto));
+        try
+        {
+            var tenant = await _tenants.AddTenant(dto);
+            return Ok(tenant);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ListTenants([FromQuery] TenantFilter filter)
+    {
+        try
+        {
+            var tenant = await _tenants.ListTenants(filter);
+            return Ok(tenant);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
     }
 }

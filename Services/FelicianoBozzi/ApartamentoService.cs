@@ -10,7 +10,7 @@ namespace apiBozzi.Services.FelicianoBozzi;
 
 public class ApartamentoService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    public async Task<ServiceResponse<PagedResult<Apartment>>> ListerApartamentos(ApartamentoFiltro apartamentoFiltro)
+    public async Task<ServiceResponse<PagedResult<Apartment>>> ListApartments(ApartamentFilter apartamentFilter)
     {
         var res = new ServiceResponse<PagedResult<Apartment>>();
 
@@ -19,8 +19,8 @@ public class ApartamentoService(IServiceProvider serviceProvider) : ServiceBase(
             var totalItens = await Context.Apartments.CountAsync();
 
             var apartamentos = await Context.Apartments
-                .Skip((apartamentoFiltro.Page - 1) * apartamentoFiltro.PageSize)
-                .Take(apartamentoFiltro.PageSize)
+                .Skip((apartamentFilter.Page - 1) * apartamentFilter.PageSize)
+                .Take(apartamentFilter.PageSize)
                 .OrderBy(x => x.Number)
                 .ToListAsync();
 
@@ -28,9 +28,9 @@ public class ApartamentoService(IServiceProvider serviceProvider) : ServiceBase(
             {
                 Items = apartamentos,
                 TotalItems = totalItens,
-                CurrentPage = apartamentoFiltro.Page,
-                PageSize = apartamentoFiltro.PageSize,
-                TotalPages = (int)Math.Ceiling((double)totalItens / apartamentoFiltro.PageSize)
+                CurrentPage = apartamentFilter.Page,
+                PageSize = apartamentFilter.PageSize,
+                TotalPages = (int)Math.Ceiling((double)totalItens / apartamentFilter.PageSize)
             };
 
             res.Object = resultado;

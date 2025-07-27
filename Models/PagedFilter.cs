@@ -1,6 +1,6 @@
-﻿namespace apiBozzi.Models.Dtos;
+﻿namespace apiBozzi.Models;
 
-public class ApartamentoFiltro
+public abstract class PagedFilter
 {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 10;

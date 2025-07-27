@@ -20,9 +20,9 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ServiceResponse<PagedResult<Apartment>>> ListApartments([FromQuery] ApartamentoFiltro apartmentFiltro)
+    public async Task<ServiceResponse<PagedResult<Apartment>>> ListApartments([FromQuery] ApartamentFilter apartmentFiltro)
     {
-        return await _apartment.ListerApartamentos(apartmentFiltro);
+        return await _apartment.ListApartments(apartmentFiltro);
     }
 
     [HttpPost]

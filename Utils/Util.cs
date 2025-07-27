@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Data.SqlTypes;
+using FluentValidation;
+using FluentValidation.Validators;
 
 namespace apiBozzi.Utils;
 
@@ -36,5 +38,52 @@ public static class Util
     public static bool HasValue(this object source)
     {
         return !IsEmpty(source);
+    }
+
+    public static bool IsValidCpf(this string cpf)
+    {
+        // Remove formatação
+        cpf = cpf.Replace(".", "").Replace("-", "");
+
+        // Verifica se tem 11 dígitos
+        if (cpf.Length != 11 || !cpf.All(char.IsDigit))
+            return false;
+
+        // Verifica se todos os dígitos são iguais
+        if (cpf.All(c => c == cpf[0]))
+            return false;
+
+        // Validação dos dígitos verificadores
+        var digits = cpf.Select(c => int.Parse(c.ToString())).ToArray();
+
+        // Primeiro dígito verificador
+        var sum = 0;
+        for (int i = 0; i < 9; i++)
+            sum += digits[i] * (10 - i);
+
+        var firstDigit = (sum * 10) % 11;
+        if (firstDigit >= 10) firstDigit = 0;
+
+        if (digits[9] != firstDigit)
+            return false;
+
+        // Segundo dígito verificador
+        sum = 0;
+        for (int i = 0; i < 10; i++)
+            sum += digits[i] * (11 - i);
+
+        var secondDigit = (sum * 10) % 11;
+        if (secondDigit >= 10) secondDigit = 0;
+
+        return digits[10] == secondDigit;
+    }
+
+    public static bool IsValidEmail(this string email)
+    {
+        var validator = new InlineValidator<string>();
+        validator.RuleFor(x => x).EmailAddress();
+
+        var result = validator.Validate(email);
+        return result.IsValid;
     }
 }
