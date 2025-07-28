@@ -12,6 +12,15 @@
             </PendingDiffInfo>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/Models/Responses/ApartmentResponse.cs">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/Models/Responses/ApartmentResponse.cs" />
+              <option name="originalContent" value="namespace apiBozzi.Models.Responses;&#10;&#10;public class ApartmentResponse&#10;{&#10;    &#10;}" />
+              <option name="updatedContent" value="using apiBozzi.Models.FelicianoBozzi;&#10;using apiBozzi.Models.Enums;&#10;&#10;namespace apiBozzi.Models.Responses;&#10;&#10;public class ApartmentResponse&#10;{&#10;    public int Id { get; set; }&#10;    public DateTime CreatedAt { get; set; }&#10;    public string Number { get; set; } = string.Empty;&#10;    public decimal Rent { get; set; }&#10;    public FloorEnum Floor { get; set; }&#10;    public TenantResponse? ResponsibleTenant { get; set; }&#10;&#10;    public ApartmentResponse(Apartment value)&#10;    {&#10;        Id = value.Id;&#10;        CreatedAt = value.CreatedAt;&#10;        Number = value.Number;&#10;        Rent = value.Rent;&#10;        Floor = value.Floor;&#10;        ResponsibleTenant = value.ResponsibleTenant != null ? new TenantResponse(value.ResponsibleTenant) : null;&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

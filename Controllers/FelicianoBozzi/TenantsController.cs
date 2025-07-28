@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using apiBozzi.Models;
 using apiBozzi.Models.Dtos;
-using apiBozzi.Models.FelicianoBozzi;
 using apiBozzi.Services.FelicianoBozzi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace apiBozzi.Controllers.FelicianoBozzi;
 
-// [Authorize]
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class TenantsController : ControllerBase

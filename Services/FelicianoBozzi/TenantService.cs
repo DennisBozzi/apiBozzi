@@ -3,6 +3,7 @@ using apiBozzi.Context;
 using apiBozzi.Models;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Models.FelicianoBozzi;
+using apiBozzi.Models.Responses;
 using apiBozzi.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +13,13 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 {
     #region Main
 
-    public async Task<Tenant> AddTenant(NewTenant dto)
+    public async Task<TenantResponse> AddTenant(NewTenant dto)
     {
         await ValidateTenant(dto);
 
         var newTenant = new Tenant(dto)
         {
-            ResponsibleTenant = dto.ResponsibleTenantId.HasValue()
+            Responsible = dto.ResponsibleTenantId.HasValue()
                 ? await Context.Tenants.FirstOrDefaultAsync(x => x.Id == dto.ResponsibleTenantId)
                 : null
         };
@@ -26,26 +27,27 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
         var res = await Context.Tenants.AddAsync(newTenant);
         await Context.SaveChangesAsync();
 
-        return res.Entity;
+        return new TenantResponse(res.Entity);
     }
 
-    public async Task<PagedResult<Tenant>> ListTenants(TenantFilter filter)
+    public async Task<PagedResult<TenantResponse>> ListTenants(TenantFilter filter)
     {
-        var totalItens = await Context.Tenants.CountAsync();
+        var totalItems = await Context.Tenants.CountAsync();
 
         var tenants = await Context.Tenants
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .OrderBy(x => x.CreatedAt)
+            .Select(x => new TenantResponse(x))
             .ToListAsync();
 
-        var result = new PagedResult<Tenant>
+        var result = new PagedResult<TenantResponse>
         {
             Items = tenants,
-            TotalItems = totalItens,
+            TotalItems = totalItems,
             CurrentPage = filter.Page,
             PageSize = filter.PageSize,
-            TotalPages = (int)Math.Ceiling((double)totalItens / filter.PageSize)
+            TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
         };
 
         return result;
@@ -63,5 +65,12 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
         if (!dto.Email.IsValidEmail())
             throw new ValidationException("O Email informado não é valido.");
+
+        var responsible = await Context.Tenants
+            .Include(x => x.Responsible)
+            .FirstOrDefaultAsync(x => x.Id == dto.ResponsibleTenantId);
+
+        if (responsible.HasValue() && responsible.Responsible.HasValue())
+            throw new ValidationException("O responsável informado é inválido.");
     }
 }

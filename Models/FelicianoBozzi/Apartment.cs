@@ -18,6 +18,6 @@ namespace apiBozzi.Models.FelicianoBozzi
 
         [Required] public FloorEnum Floor { get; set; }
 
-        public Tenant? ResponsibleTenant { get; set; }
+        public Tenant? Responsible { get; set; }
     }
 }
