@@ -11,12 +11,13 @@ namespace apiBozzi.Services.FelicianoBozzi;
 
 public class TenantService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
+    private readonly ApartmentService _apartmentService = serviceProvider.GetRequiredService<ApartmentService>();
+
     #region Main
 
     public async Task<TenantResponse> AddTenant(NewTenant dto)
     {
         await ValidateTenant(dto);
-
         var newTenant = new Tenant(dto)
         {
             Responsible = dto.ResponsibleTenantId.HasValue()
@@ -24,10 +25,20 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
                 : null
         };
 
-        var res = await Context.Tenants.AddAsync(newTenant);
-        await Context.SaveChangesAsync();
-
-        return new TenantResponse(res.Entity);
+        await using var transaction = await Context.Database.BeginTransactionAsync();
+        try
+        {
+            var res = await Context.Tenants.AddAsync(newTenant);
+            await Context.SaveChangesAsync();
+            await _apartmentService.MakeResponsible(dto.ApartmentId, res.Entity.Id);
+            await transaction.CommitAsync();
+            return new TenantResponse(res.Entity);
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<PagedResult<TenantResponse>> ListTenants(TenantFilter filter)
@@ -38,7 +49,7 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .OrderBy(x => x.CreatedAt)
-            .Select(x => new TenantResponse(x))
+            .Select(x => new TenantResponse(x, true))
             .ToListAsync();
 
         var result = new PagedResult<TenantResponse>
@@ -51,6 +62,33 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
         };
 
         return result;
+    }
+
+    public async Task<TenantResponse> GetOneTenantAsync(int id)
+    {
+        var tenant = await Context.Tenants
+            .Include(x => x.Responsible)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (tenant == null)
+            throw new ValidationException("O inquilino não foi encontrado.");
+
+        var res = new TenantResponse(tenant);
+
+        var dependents = await Context.Tenants
+            .Where(x => x.Responsible == tenant)
+            .ToListAsync();
+
+        var ap = tenant.Responsible != null
+            ? await Context.Apartments.FirstOrDefaultAsync(x => x.Responsible == tenant.Responsible)
+            : await Context.Apartments.FirstOrDefaultAsync(x => x.Responsible == tenant);
+
+        if (ap != null)
+            res.WithApartment(ap);
+
+        res.WithDependents(dependents);
+
+        return res;
     }
 
     #endregion

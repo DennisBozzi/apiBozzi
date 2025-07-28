@@ -11,4 +11,5 @@ public class NewTenant
     public DateTime Born { get; set; }
     public string? Phone { get; set; }
     public int ResponsibleTenantId { get; set; }
+    public int ApartmentId { get; set; }
 }

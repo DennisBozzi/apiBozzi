@@ -10,8 +10,10 @@ public class Tenant : Person
     public DateTime? Born { get; set; }
     public Tenant? Responsible { get; set; }
 
-    public Tenant(){}
-    
+    public Tenant()
+    {
+    }
+
     public Tenant(NewTenant dto)
     {
         FirstName = dto.FirstName;

@@ -12,6 +12,11 @@ public class ApartmentResponse
     public decimal Rent { get; set; }
     public FloorEnum Floor { get; set; }
     public TenantResponse? Responsible { get; set; }
+    public virtual ICollection<TenantResponse> Residents { get; set; } = new List<TenantResponse>();
+
+    public ApartmentResponse()
+    {
+    }
 
     public ApartmentResponse(Apartment value)
     {
@@ -21,5 +26,11 @@ public class ApartmentResponse
         Rent = value.Rent;
         Floor = value.Floor;
         Responsible = value.Responsible.HasValue() ? new TenantResponse(value.Responsible) : null;
+    }
+
+    public ApartmentResponse WithResidents(ICollection<Tenant> value)
+    {
+        Residents = value.Select(x => new TenantResponse(x, false)).ToList();
+        return this;
     }
 }

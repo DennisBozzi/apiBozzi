@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiBozzi.Controllers.FelicianoBozzi;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("[controller]")]
 public class TenantsController : ControllerBase
@@ -42,6 +42,20 @@ public class TenantsController : ControllerBase
         try
         {
             var tenant = await _tenants.ListTenants(filter);
+            return Ok(tenant);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetOneTenantAsync(int id)
+    {
+        try
+        {
+            var tenant = await _tenants.GetOneTenantAsync(id);
             return Ok(tenant);
         }
         catch (Exception e)

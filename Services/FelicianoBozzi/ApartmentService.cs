@@ -67,6 +67,29 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
         return new ApartmentResponse(ap);
     }
 
+    public async Task<ApartmentResponse> GetApartmentById(int idApartment)
+    {
+        var apartment = await Context.Apartments
+            .Include(x => x.Responsible)
+            .FirstOrDefaultAsync(x => x.Id == idApartment);
+
+        if (apartment == null)
+            throw new ValidationException("O apartamento não foi encontrado.");
+
+        var res = new ApartmentResponse(apartment);
+
+        if (apartment.Responsible == null)
+            return res;
+
+        var residents = Context.Tenants
+            .Where(x => x.Responsible == apartment.Responsible || x == apartment.Responsible)
+            .ToList();
+
+        res.WithResidents(residents);
+
+        return res;
+    }
+
     #endregion
 
     private void ValidateApartment(string numero)
