@@ -37,15 +37,16 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
         return res;
     }
 
-    public async Task<ApartmentResponse> AddApartment(string numero, int andar, decimal valor)
+    public async Task<ApartmentResponse> AddApartment(NewApartment value)
     {
-        ValidateApartment(numero);
+        ValidateApartment(value.Number);
 
         var newAp = new Apartment
         {
-            Number = numero.ToUpper(),
-            Floor = (FloorEnum)andar,
-            Rent = valor
+            Number = value.Number.ToUpper(),
+            Floor = (FloorEnum)value.Floor,
+            Type = (ApartmentTypeEnum)value.Type,
+            Rent = value.RentValue,
         };
 
         var res = await Context.Apartments.AddAsync(newAp);

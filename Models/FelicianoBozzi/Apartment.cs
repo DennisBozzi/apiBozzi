@@ -7,9 +7,7 @@ namespace apiBozzi.Models.FelicianoBozzi
     public class Apartment
     {
         [Key] public int Id { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
-
         [Required] [MaxLength(10)] public string Number { get; set; } = string.Empty;
 
         [Required]
@@ -17,7 +15,7 @@ namespace apiBozzi.Models.FelicianoBozzi
         public decimal Rent { get; set; }
 
         [Required] public FloorEnum Floor { get; set; }
-
+        [Required] public ApartmentTypeEnum Type { get; set; }
         public Tenant? Responsible { get; set; }
     }
 }

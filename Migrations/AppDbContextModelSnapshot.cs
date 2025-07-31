@@ -47,6 +47,9 @@ namespace apiBozzi.Migrations
                     b.Property<int?>("ResponsibleId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ResponsibleId");

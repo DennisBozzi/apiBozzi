@@ -11,6 +11,7 @@ public class ApartmentResponse
     public string Number { get; set; }
     public decimal Rent { get; set; }
     public FloorEnum Floor { get; set; }
+    public ApartmentTypeEnum Type { get; set; }
     public TenantResponse? Responsible { get; set; }
     public virtual ICollection<TenantResponse> Residents { get; set; } = new List<TenantResponse>();
 
@@ -25,6 +26,7 @@ public class ApartmentResponse
         Number = value.Number;
         Rent = value.Rent;
         Floor = value.Floor;
+        Type = value.Type;
         Responsible = value.Responsible.HasValue() ? new TenantResponse(value.Responsible) : null;
     }
 

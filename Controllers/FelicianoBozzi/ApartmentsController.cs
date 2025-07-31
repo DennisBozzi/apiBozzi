@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiBozzi.Controllers.FelicianoBozzi;
 
-// [Authorize]
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class ApartmentsController : ControllerBase
@@ -51,11 +51,11 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddApartment(string numero, int andar, decimal valor)
+    public async Task<IActionResult> AddApartment(NewApartment value)
     {
         try
         {
-            var apartment = await _apartment.AddApartment(numero, andar, valor);
+            var apartment = await _apartment.AddApartment(value);
             return Ok(apartment);
         }
         catch (ValidationException e)
