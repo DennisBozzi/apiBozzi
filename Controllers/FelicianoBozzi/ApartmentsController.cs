@@ -33,11 +33,29 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetOneApartment(int id)
+    public async Task<IActionResult> GetOneApartmentById(int id)
     {
         try
         {
             var ap = await _apartment.GetApartmentById(id);
+            return Ok(ap);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
+
+    [HttpGet("number/{number}")]
+    public async Task<IActionResult> GetOneApartmentByNumber(string number)
+    {
+        try
+        {
+            var ap = await _apartment.GetApartmentByNumber(number);
             return Ok(ap);
         }
         catch (ValidationException e)
