@@ -103,4 +103,22 @@ public class ApartmentsController : ControllerBase
             return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
         }
     }
+    
+    [HttpPut("RemoveResponsible")]
+    public async Task<IActionResult> RemoveResponsible(int apId)
+    {
+        try
+        {
+            var apartment = await _apartment.RemoveResponsible(apId);
+            return Ok(apartment);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
 }

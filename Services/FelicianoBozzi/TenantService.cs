@@ -45,16 +45,53 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
     {
         var totalItems = await Context.Tenants.CountAsync();
 
-        var tenants = await Context.Tenants
+        var tenants = Context.Tenants
             .Skip((filter.Page - 1) * filter.PageSize)
-            .Take(filter.PageSize)
+            .Take(filter.PageSize);
+
+        if (filter.Name != null)
+            tenants = tenants.Where(x =>
+                x.FirstName.ToLower().StartsWith(filter.Name.ToLower()) ||
+                x.LastName.ToLower().StartsWith(filter.Name.ToLower()));
+
+        var items = await tenants.OrderBy(x => x.CreatedAt)
+            .Select(x => new TenantResponse(x, true))
+            .ToListAsync();
+
+        var result = new PagedResult<TenantResponse>
+        {
+            Items = items,
+            TotalItems = totalItems,
+            CurrentPage = filter.Page,
+            PageSize = filter.PageSize,
+            TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
+        };
+
+        return result;
+    }
+
+    public async Task<PagedResult<TenantResponse>> ListResponsibleTenants(TenantFilter filter)
+    {
+        var totalItems = await Context.Tenants.CountAsync();
+
+        var tenants = Context.Tenants
+            .Where(x => x.Responsible == null)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize);
+
+        if (filter.Name != null)
+            tenants = tenants.Where(x =>
+                x.FirstName.ToLower().StartsWith(filter.Name.ToLower()) ||
+                x.LastName.ToLower().StartsWith(filter.Name.ToLower()));
+
+        var items = await tenants.Include(x => x.Responsible)
             .OrderBy(x => x.CreatedAt)
             .Select(x => new TenantResponse(x, true))
             .ToListAsync();
 
         var result = new PagedResult<TenantResponse>
         {
-            Items = tenants,
+            Items = items,
             TotalItems = totalItems,
             CurrentPage = filter.Page,
             PageSize = filter.PageSize,

@@ -49,6 +49,20 @@ public class TenantsController : ControllerBase
             return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
         }
     }
+    
+    [HttpGet("Responsibles")]
+    public async Task<IActionResult> ListResponsibleTenant([FromQuery] TenantFilter filter)
+    {
+        try
+        {
+            var tenant = await _tenants.ListResponsibleTenants(filter);
+            return Ok(tenant);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOneTenantAsync(int id)

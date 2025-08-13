@@ -39,7 +39,7 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
 
     public async Task<ApartmentResponse> AddApartment(NewApartment value)
     {
-        ValidateApartment(value.Number);
+        _ExistApartment(value.Number);
 
         var newAp = new Apartment
         {
@@ -60,9 +60,21 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
         var ap = await Context.Apartments.Include(x => x.Responsible).FirstOrDefaultAsync(x => x.Id == idApartment);
         var ten = await Context.Tenants.Include(x => x.Responsible).FirstOrDefaultAsync(x => x.Id == idTenant);
 
-        ValidateResponsible(ap, ten);
+        _ValidateMakeResponsible(ap, ten);
 
         ap.Responsible = ten;
+        Context.SaveChangesAsync();
+
+        return new ApartmentResponse(ap);
+    }
+
+    public async Task<ApartmentResponse> RemoveResponsible(int idApartment)
+    {
+        var ap = await Context.Apartments.Include(x => x.Responsible).FirstOrDefaultAsync(x => x.Id == idApartment);
+
+        _ValidateRemoveResponsible(ap);
+
+        ap.Responsible = null;
         Context.SaveChangesAsync();
 
         return new ApartmentResponse(ap);
@@ -95,7 +107,7 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
     {
         var apartment = await Context.Apartments
             .Include(x => x.Responsible)
-            .FirstOrDefaultAsync(x => x.Number.Equals(numberApartment, StringComparison.CurrentCultureIgnoreCase));
+            .FirstOrDefaultAsync(x => x.Number.ToUpper().Equals(numberApartment.ToUpper()));
 
         if (apartment == null)
             throw new ValidationException("O apartamento não foi encontrado.");
@@ -116,14 +128,14 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
 
     #endregion
 
-    private void ValidateApartment(string numero)
+    private void _ExistApartment(string numero)
     {
         var existeAp = Context.Apartments.Any(x => x.Number.ToLower().Equals(numero.ToLower()));
         if (existeAp)
             throw new ValidationException("Já existe um apartamento com esse número.");
     }
 
-    private void ValidateResponsible(Apartment? ap, Tenant? ten)
+    private void _ValidateMakeResponsible(Apartment? ap, Tenant? ten)
     {
         if (ten.IsEmpty())
             throw new ValidationException("O inquilino não foi encontrado.");
@@ -136,5 +148,11 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
 
         if (ten.Responsible.HasValue())
             throw new ValidationException("O inquilino não é válido.");
+    }
+
+    private void _ValidateRemoveResponsible(Apartment? ap)
+    {
+        if (ap.IsEmpty())
+            throw new ValidationException("O apartamento não foi encontrado.");
     }
 }
