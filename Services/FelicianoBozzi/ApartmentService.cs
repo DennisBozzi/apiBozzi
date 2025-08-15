@@ -140,6 +140,9 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
         if (ten.IsEmpty())
             throw new ValidationException("O inquilino não foi encontrado.");
 
+        if (Context.Apartments.Any(x => x.Responsible == ten))
+            throw new ValidationException("O inquilino já possui um apartamento.");
+
         if (ap.IsEmpty())
             throw new ValidationException("O apartamento não foi encontrado.");
 

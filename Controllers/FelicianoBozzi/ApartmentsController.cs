@@ -87,11 +87,11 @@ public class ApartmentsController : ControllerBase
     }
 
     [HttpPut("MakeResponsible")]
-    public async Task<IActionResult> MakeResponsible(int apId, int tenId)
+    public async Task<IActionResult> MakeResponsible(MakeResponsibleDto dto)
     {
         try
         {
-            var apartment = await _apartment.MakeResponsible(apId, tenId);
+            var apartment = await _apartment.MakeResponsible(dto.apId, dto.tenId);
             return Ok(apartment);
         }
         catch (ValidationException e)
@@ -103,9 +103,9 @@ public class ApartmentsController : ControllerBase
             return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
         }
     }
-    
+
     [HttpPut("RemoveResponsible")]
-    public async Task<IActionResult> RemoveResponsible(int apId)
+    public async Task<IActionResult> RemoveResponsible([FromBody] int apId)
     {
         try
         {
