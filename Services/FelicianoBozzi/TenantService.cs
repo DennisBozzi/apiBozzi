@@ -30,7 +30,8 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
         {
             var res = await Context.Tenants.AddAsync(newTenant);
             await Context.SaveChangesAsync();
-            await _apartmentService.MakeResponsible(dto.ApartmentId, res.Entity.Id);
+            if (dto.ApartmentId > 0)
+                await _apartmentService.MakeResponsible(dto.ApartmentId, res.Entity.Id);
             await transaction.CommitAsync();
             return new TenantResponse(res.Entity);
         }
@@ -43,16 +44,23 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
     public async Task<PagedResult<TenantResponse>> ListTenants(TenantFilter filter)
     {
-        var totalItems = await Context.Tenants.CountAsync();
+        var totalItems = 0;
 
         var tenants = Context.Tenants
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize);
 
-        if (filter.Name != null)
+        if (filter.NameCpf != null)
+        {
             tenants = tenants.Where(x =>
-                x.FirstName.ToLower().StartsWith(filter.Name.ToLower()) ||
-                x.LastName.ToLower().StartsWith(filter.Name.ToLower()));
+                x.FirstName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
+                x.LastName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
+                x.Cpf.ToLower().StartsWith(filter.NameCpf.Replace(".", "").Replace("-", "").ToLower()));
+
+            totalItems = await tenants.CountAsync();
+        }
+        else
+            totalItems = await Context.Tenants.CountAsync();
 
         var items = await tenants.OrderBy(x => x.CreatedAt)
             .Select(x => new TenantResponse(x, true))
@@ -79,10 +87,10 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize);
 
-        if (filter.Name != null)
+        if (filter.NameCpf != null)
             tenants = tenants.Where(x =>
-                x.FirstName.ToLower().StartsWith(filter.Name.ToLower()) ||
-                x.LastName.ToLower().StartsWith(filter.Name.ToLower()));
+                x.FirstName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
+                x.LastName.ToLower().StartsWith(filter.NameCpf.ToLower()));
 
         var items = await tenants.Include(x => x.Responsible)
             .OrderBy(x => x.CreatedAt)

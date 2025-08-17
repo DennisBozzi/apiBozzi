@@ -4,5 +4,5 @@ namespace apiBozzi.Models.Dtos;
 
 public class TenantFilter : PagedFilter
 {
-    public string? Name { get; set; }
+    public string? NameCpf { get; set; }
 }
