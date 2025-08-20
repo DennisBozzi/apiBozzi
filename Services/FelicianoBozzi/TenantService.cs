@@ -44,31 +44,53 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
     public async Task<PagedResult<TenantResponse>> ListTenants(TenantFilter filter)
     {
-        var totalItems = 0;
+        var apartments = await Context.Apartments
+            .Include(x => x.Responsible)
+            .Where(x => x.Responsible != null)
+            .ToListAsync();
 
-        var tenants = Context.Tenants
-            .Skip((filter.Page - 1) * filter.PageSize)
-            .Take(filter.PageSize);
+        var rentedTenantIds = apartments
+            .Where(a => a.Responsible != null)
+            .Select(a => a.Responsible?.Id)
+            .ToList();
+
+        var tenants = Context.Tenants.Include(x => x.Responsible).AsQueryable();
+
+        if (filter.OnlyRented)
+            tenants = tenants.Where(x =>
+                rentedTenantIds.Contains(x.Id) || rentedTenantIds.Contains(x.Responsible!.Id));
 
         if (filter.NameCpf != null)
-        {
             tenants = tenants.Where(x =>
                 x.FirstName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
                 x.LastName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
                 x.Cpf.ToLower().StartsWith(filter.NameCpf.Replace(".", "").Replace("-", "").ToLower()));
 
-            totalItems = await tenants.CountAsync();
-        }
-        else
-            totalItems = await Context.Tenants.CountAsync();
+        var totalItems = await tenants
+            .CountAsync();
 
-        var items = await tenants.OrderBy(x => x.CreatedAt)
-            .Select(x => new TenantResponse(x, true))
-            .ToListAsync();
+        var items = tenants.ToList().Select(tenant =>
+        {
+            var ap = apartments
+                .FirstOrDefault(a => a.Responsible == tenant || a.Responsible == tenant.Responsible);
+
+            var res = new TenantResponse(tenant);
+
+            return ap == null ? res : res.WithApartment(ap);
+        });
+
+        items = filter.OnlyRented
+            ? items.OrderBy(x => x.Apartment?.Number)
+            : items.OrderBy(x => x.FirstName);
+
+        var pagedItems = items
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .ToList();
 
         var result = new PagedResult<TenantResponse>
         {
-            Items = items,
+            Items = pagedItems,
             TotalItems = totalItems,
             CurrentPage = filter.Page,
             PageSize = filter.PageSize,
@@ -155,5 +177,10 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
         if (responsible.HasValue() && responsible.Responsible.HasValue())
             throw new ValidationException("O responsável informado é inválido.");
+    }
+
+    private int TotalItems()
+    {
+        return 0;
     }
 }

@@ -14,7 +14,7 @@ public class TenantResponse
     public string? Phone { get; set; }
     public DateTime? Born { get; set; }
     public TenantResponse? Responsible { get; set; }
-    public string Number { get; set; }
+    public ApartmentResponse? Apartment { get; set; }
     public virtual ICollection<TenantResponse> Dependents { get; set; } = new List<TenantResponse>();
 
     public TenantResponse(Tenant value, bool useResponsible = true)
@@ -32,7 +32,7 @@ public class TenantResponse
 
     public TenantResponse WithApartment(Apartment ap)
     {
-        Number = ap.Number;
+        Apartment = new ApartmentResponse(ap);
         return this;
     }
 
