@@ -27,7 +27,7 @@ public class ApartmentResponse
         Rent = value.Rent;
         Floor = value.Floor;
         Type = value.Type;
-        Responsible = value.Responsible.HasValue() ? new TenantResponse(value.Responsible) : null;
+        Responsible = value.Responsible != null ? new TenantResponse(value.Responsible) : null;
     }
 
     public ApartmentResponse WithResidents(ICollection<Tenant> value)

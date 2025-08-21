@@ -37,6 +37,36 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
         return res;
     }
 
+    public async Task<PagedResult<ApartmentResponse>> ListAvailableApartments(ApartmentFilter filter)
+    {
+        var apartments = Context.Apartments
+            .Include(x => x.Responsible)
+            .Where(x => x.Responsible == null);
+
+        if (filter.Number != null)
+            apartments = apartments.Where(x => x.Number.ToLower().Contains(filter.Number.ToLower()));
+
+        var items = await apartments
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .OrderBy(x => x.CreatedAt)
+            .Select(x => new ApartmentResponse(x))
+            .ToListAsync();
+
+        var totalItems = items.Count;
+
+        var res = new PagedResult<ApartmentResponse>
+        {
+            Items = items,
+            TotalItems = totalItems,
+            CurrentPage = filter.Page,
+            PageSize = filter.PageSize,
+            TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
+        };
+
+        return res;
+    }
+
     public async Task<ApartmentResponse> AddApartment(NewApartment value)
     {
         _ExistApartment(value.Number);

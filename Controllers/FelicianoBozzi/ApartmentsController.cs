@@ -32,6 +32,20 @@ public class ApartmentsController : ControllerBase
         }
     }
 
+    [HttpGet("Available")]
+    public async Task<IActionResult> ListAvailableApartments([FromQuery] ApartmentFilter apartmentFiltro)
+    {
+        try
+        {
+            var apartments = await _apartment.ListAvailableApartments(apartmentFiltro);
+            return Ok(apartments);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOneApartmentById(int id)
     {
