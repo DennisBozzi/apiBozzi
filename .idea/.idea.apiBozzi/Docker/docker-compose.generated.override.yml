@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  api:
+    build:
+      context: "C:\\Users\\denno\\RiderProjects\\apiBozzi"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/apiBozzi.dll"
+    environment:
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/apiBozzi.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "apibozzi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\denno\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\denno\\RiderProjects\\apibozzi:/app:rw"
+    - "C:\\Users\\denno\\RiderProjects\\apiBozzi:/src:rw"
+    working_dir: "/app"
