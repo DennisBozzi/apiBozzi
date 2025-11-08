@@ -29,6 +29,17 @@ public class ApartmentResponse
         Type = value.Type;
         Responsible = value.Responsible != null ? new TenantResponse(value.Responsible) : null;
     }
+    
+    public ApartmentResponse(ApartmentDemo value)
+    {
+        Id = value.Id;
+        CreatedAt = value.CreatedAt;
+        Number = value.Number;
+        Rent = value.Rent;
+        Floor = value.Floor;
+        Type = value.Type;
+        Responsible = value.Responsible != null ? new TenantResponse(value.Responsible) : null;
+    }
 
     public ApartmentResponse WithResidents(ICollection<Tenant> value)
     {

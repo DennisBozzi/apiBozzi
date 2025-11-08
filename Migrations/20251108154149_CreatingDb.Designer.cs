@@ -12,7 +12,7 @@ using apiBozzi.Context;
 namespace apiBozzi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251108130342_CreatingDb")]
+    [Migration("20251108154149_CreatingDb")]
     partial class CreatingDb
     {
         /// <inheritdoc />
@@ -60,6 +60,41 @@ namespace apiBozzi.Migrations
                     b.ToTable("Apartments");
                 });
 
+            modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.ApartmentDemo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<decimal>("Rent")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int?>("ResponsibleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResponsibleId");
+
+                    b.ToTable("ApartmentsDemo");
+                });
+
             modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.Tenant", b =>
                 {
                     b.Property<int>("Id")
@@ -94,8 +129,8 @@ namespace apiBozzi.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<int?>("ResponsibleId")
                         .HasColumnType("integer");
@@ -107,6 +142,53 @@ namespace apiBozzi.Migrations
                     b.ToTable("Tenants");
                 });
 
+            modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.TenantDemo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Born")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("character varying(11)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int?>("ResponsibleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResponsibleId");
+
+                    b.ToTable("TenantsDemo");
+                });
+
             modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.Apartment", b =>
                 {
                     b.HasOne("apiBozzi.Models.FelicianoBozzi.Tenant", "Responsible")
@@ -116,9 +198,27 @@ namespace apiBozzi.Migrations
                     b.Navigation("Responsible");
                 });
 
+            modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.ApartmentDemo", b =>
+                {
+                    b.HasOne("apiBozzi.Models.FelicianoBozzi.TenantDemo", "Responsible")
+                        .WithMany()
+                        .HasForeignKey("ResponsibleId");
+
+                    b.Navigation("Responsible");
+                });
+
             modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.Tenant", b =>
                 {
                     b.HasOne("apiBozzi.Models.FelicianoBozzi.Tenant", "Responsible")
+                        .WithMany()
+                        .HasForeignKey("ResponsibleId");
+
+                    b.Navigation("Responsible");
+                });
+
+            modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.TenantDemo", b =>
+                {
+                    b.HasOne("apiBozzi.Models.FelicianoBozzi.TenantDemo", "Responsible")
                         .WithMany()
                         .HasForeignKey("ResponsibleId");
 

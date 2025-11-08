@@ -30,4 +30,10 @@
       <Folder Include="Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20251108150607_CreatingDb.cs" />
+      <Compile Remove="Migrations\20251108150607_CreatingDb.Designer.cs" />
+      <Compile Remove="Migrations\AppDbContextModelSnapshot.cs" />
+    </ItemGroup>
+
 </Project>

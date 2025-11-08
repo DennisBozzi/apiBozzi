@@ -1,0 +1,47 @@
+﻿{
+  "Tenants": [
+    { "FirstName": "Joao",   "LastName": "Silva",    "Cpf": "11111111111", "Email": "joao@example.com",   "Phone": "11999990001", "Born": "1990-05-01T00:00:00Z" },
+    { "FirstName": "Maria",  "LastName": "Silva",    "Cpf": "22222222222", "Email": "maria@example.com",  "Phone": "11999990002", "ResponsibleCpf": "11111111111" },
+    { "FirstName": "Pedro",  "LastName": "Silva",    "Cpf": "22222222223", "Email": "pedro@example.com",  "Phone": "11999990012", "ResponsibleCpf": "11111111111" },
+
+    { "FirstName": "Ana",    "LastName": "Costa",    "Cpf": "44444444444", "Email": "ana@example.com",    "Phone": "11999990004" },
+    { "FirstName": "Fabio",  "LastName": "Costa",    "Cpf": "44444444445", "Email": "fabio@example.com",  "Phone": "11999990005", "ResponsibleCpf": "44444444444" },
+    { "FirstName": "Julia",  "LastName": "Costa",    "Cpf": "44444444446", "Email": "julia@example.com",  "Phone": "11999990006", "ResponsibleCpf": "44444444444" },
+
+    { "FirstName": "Bruno",  "LastName": "Souza",    "Cpf": "55555555555", "Email": "bruno@example.com",  "Phone": "11999990007" },
+    { "FirstName": "Luiza",  "LastName": "Souza",    "Cpf": "55555555556", "Email": "luiza@example.com",  "Phone": "11999990008", "ResponsibleCpf": "55555555555" },
+    { "FirstName": "Rafael", "LastName": "Souza",    "Cpf": "55555555557", "Email": "rafael@example.com", "Phone": "11999990009", "ResponsibleCpf": "55555555555" },
+
+    { "FirstName": "Carla",  "LastName": "Mendes",   "Cpf": "66666666666", "Email": "carla@example.com",  "Phone": "11999990010" },
+    { "FirstName": "Sofia",  "LastName": "Mendes",   "Cpf": "66666666668", "Email": "sofia@example.com",  "Phone": "11999990011", "ResponsibleCpf": "66666666666" },
+    { "FirstName": "Tiago",  "LastName": "Mendes",   "Cpf": "66666666669", "Email": "tiago@example.com",  "Phone": "11999990013", "ResponsibleCpf": "66666666666" },
+
+    { "FirstName": "Diego",  "LastName": "Lima",     "Cpf": "77777777777", "Email": "diego@example.com",  "Phone": "11999990014" },
+
+    { "FirstName": "Elisa",  "LastName": "Rocha",    "Cpf": "88888888888", "Email": "elisa@example.com",  "Phone": "11999990015" },
+    { "FirstName": "Marina", "LastName": "Rocha",    "Cpf": "88888888880", "Email": "marina@example.com", "Phone": "11999990016", "ResponsibleCpf": "88888888888" },
+    { "FirstName": "Paulo",  "LastName": "Rocha",    "Cpf": "88888888881", "Email": "paulo@example.com",  "Phone": "11999990017", "ResponsibleCpf": "88888888888" },
+
+    { "FirstName": "Carlos", "LastName": "Pereira",  "Cpf": "33333333333", "Email": "carlos@example.com", "Phone": "11999990003" }
+  ],
+  "Apartments": [
+    { "Number": "101A", "Rent": 1500.00, "Floor": 1, "Type": 0, "ResponsibleCpf": "11111111111" },
+    { "Number": "102B", "Rent": 1750.00, "Floor": 1, "Type": 1 },
+    { "Number": "103C", "Rent": 1800.00, "Floor": 1, "Type": 2, "ResponsibleCpf": "44444444444" },
+
+    { "Number": "201A", "Rent": 2000.00, "Floor": 2, "Type": 1, "ResponsibleCpf": "55555555555" },
+    { "Number": "202B", "Rent": 1600.00, "Floor": 2, "Type": 0 },
+    { "Number": "203C", "Rent": 2100.00, "Floor": 2, "Type": 2, "ResponsibleCpf": "66666666666" },
+
+    { "Number": "301A", "Rent": 2200.00, "Floor": 3, "Type": 1, "ResponsibleCpf": "77777777777" },
+    { "Number": "302B", "Rent": 1650.00, "Floor": 3, "Type": 0 },
+    { "Number": "303C", "Rent": 2300.00, "Floor": 3, "Type": 2, "ResponsibleCpf": "88888888888" },
+
+    { "Number": "401A", "Rent": 2400.00, "Floor": 4, "Type": 1 },
+    { "Number": "402B", "Rent": 1700.00, "Floor": 4, "Type": 0, "ResponsibleCpf": "33333333333" },
+    { "Number": "403C", "Rent": 2450.00, "Floor": 4, "Type": 2 },
+
+    { "Number": "S01",  "Rent": 3000.00, "Floor": 5, "Type": 1 },
+    { "Number": "K1",   "Rent": 1200.00, "Floor": 6, "Type": 0 }
+  ]
+}

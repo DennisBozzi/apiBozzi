@@ -11,5 +11,7 @@ public class AppDbContext : DbContext
 
     // Feliciano Bozzi
     public DbSet<Apartment> Apartments { get; set; }
+    public DbSet<ApartmentDemo> ApartmentsDemo { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<TenantDemo> TenantsDemo { get; set; }
 }

@@ -30,13 +30,38 @@ public class TenantResponse
         Responsible = value.Responsible != null && useResponsible ? new TenantResponse(value.Responsible, false) : null;
     }
 
+    public TenantResponse(TenantDemo value, bool useResponsible = true)
+    {
+        Id = value.Id;
+        CreatedAt = value.CreatedAt;
+        FirstName = value.FirstName;
+        LastName = value.LastName;
+        Cpf = value.Cpf;
+        Email = value.Email;
+        Phone = value.Phone;
+        Born = value.Born;
+        Responsible = value.Responsible != null && useResponsible ? new TenantResponse(value.Responsible, false) : null;
+    }
+
     public TenantResponse WithApartment(Apartment ap)
     {
         Apartment = new ApartmentResponse(ap);
         return this;
     }
 
+    public TenantResponse WithApartment(ApartmentDemo ap)
+    {
+        Apartment = new ApartmentResponse(ap);
+        return this;
+    }
+
     public TenantResponse WithDependents(ICollection<Tenant> value)
+    {
+        Dependents = value.Select(x => new TenantResponse(x, false)).ToList();
+        return this;
+    }
+
+    public TenantResponse WithDependents(ICollection<TenantDemo> value)
     {
         Dependents = value.Select(x => new TenantResponse(x, false)).ToList();
         return this;

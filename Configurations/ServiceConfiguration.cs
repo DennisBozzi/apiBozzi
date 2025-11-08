@@ -38,6 +38,9 @@ public static class ServiceConfiguration
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
 
+        services.AddHttpContextAccessor();
+        services.AddScoped<FirebaseUserProvider>();
+
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAllOrigins",
