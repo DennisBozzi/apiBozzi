@@ -44,10 +44,14 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
     public async Task<PagedResult<TenantResponse>> ListTenants(TenantFilter filter)
     {
-        var apartments = await Context.Apartments
+        var apartments = new List<Apartment>();
+        
+        var query = Context.Apartments
             .Include(x => x.Responsible)
-            .Where(x => x.Responsible != null)
-            .ToListAsync();
+            .Where(x => x.Responsible != null);
+
+        if (query.Any())
+            apartments = await query.ToListAsync();
 
         var rentedTenantIds = apartments
             .Where(a => a.Responsible != null)

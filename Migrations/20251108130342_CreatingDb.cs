@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace apiBozzi.Migrations
 {
     /// <inheritdoc />
-    public partial class FelicianoBozzi : Migration
+    public partial class CreatingDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,22 +47,23 @@ namespace apiBozzi.Migrations
                     Number = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Rent = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     Floor = table.Column<int>(type: "integer", nullable: false),
-                    ResponsibleTenantId = table.Column<int>(type: "integer", nullable: true)
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    ResponsibleId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Apartments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Apartments_Tenants_ResponsibleTenantId",
-                        column: x => x.ResponsibleTenantId,
+                        name: "FK_Apartments_Tenants_ResponsibleId",
+                        column: x => x.ResponsibleId,
                         principalTable: "Tenants",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Apartments_ResponsibleTenantId",
+                name: "IX_Apartments_ResponsibleId",
                 table: "Apartments",
-                column: "ResponsibleTenantId");
+                column: "ResponsibleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tenants_ResponsibleId",

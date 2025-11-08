@@ -12,8 +12,8 @@ using apiBozzi.Context;
 namespace apiBozzi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250823145244_CreatingDatabase")]
-    partial class CreatingDatabase
+    [Migration("20251108130342_CreatingDb")]
+    partial class CreatingDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

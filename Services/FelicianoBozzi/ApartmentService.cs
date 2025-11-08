@@ -17,13 +17,17 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
     {
         var totalItems = await Context.Apartments.CountAsync();
 
-        var apartments = await Context.Apartments
+        var apartments = new List<ApartmentResponse>();
+
+        var query = Context.Apartments
             .Skip((apartmentFilter.Page - 1) * apartmentFilter.PageSize)
             .Take(apartmentFilter.PageSize)
             .OrderBy(x => x.Number)
             .Include(x => x.Responsible)
-            .Select(x => new ApartmentResponse(x))
-            .ToListAsync();
+            .Select(x => new ApartmentResponse(x));
+
+        if (query.Any())
+            apartments = await query.ToListAsync();
 
         var res = new PagedResult<ApartmentResponse>
         {
