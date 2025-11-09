@@ -25,23 +25,23 @@
     { "FirstName": "Carlos", "LastName": "Pereira",  "Cpf": "33333333333", "Email": "carlos@example.com", "Phone": "11999990003" }
   ],
   "Apartments": [
-    { "Number": "101A", "Rent": 1500.00, "Floor": 1, "Type": 0, "ResponsibleCpf": "11111111111" },
-    { "Number": "102B", "Rent": 1750.00, "Floor": 1, "Type": 1 },
-    { "Number": "103C", "Rent": 1800.00, "Floor": 1, "Type": 2, "ResponsibleCpf": "44444444444" },
+    { "Number": "101A", "Rent": 1500.00, "Floor": 1, "Type": 1, "ResponsibleCpf": "11111111111" },
+    { "Number": "102B", "Rent": 1750.00, "Floor": 1, "Type": 2 },
+    { "Number": "103C", "Rent": 1800.00, "Floor": 1, "Type": 3, "ResponsibleCpf": "44444444444" },
 
-    { "Number": "201A", "Rent": 2000.00, "Floor": 2, "Type": 1, "ResponsibleCpf": "55555555555" },
-    { "Number": "202B", "Rent": 1600.00, "Floor": 2, "Type": 0 },
-    { "Number": "203C", "Rent": 2100.00, "Floor": 2, "Type": 2, "ResponsibleCpf": "66666666666" },
+    { "Number": "201A", "Rent": 2000.00, "Floor": 2, "Type": 2, "ResponsibleCpf": "55555555555" },
+    { "Number": "202B", "Rent": 1600.00, "Floor": 2, "Type": 1 },
+    { "Number": "203C", "Rent": 2100.00, "Floor": 2, "Type": 3, "ResponsibleCpf": "66666666666" },
 
-    { "Number": "301A", "Rent": 2200.00, "Floor": 3, "Type": 1, "ResponsibleCpf": "77777777777" },
-    { "Number": "302B", "Rent": 1650.00, "Floor": 3, "Type": 0 },
-    { "Number": "303C", "Rent": 2300.00, "Floor": 3, "Type": 2, "ResponsibleCpf": "88888888888" },
+    { "Number": "301A", "Rent": 2200.00, "Floor": 3, "Type": 2, "ResponsibleCpf": "77777777777" },
+    { "Number": "302B", "Rent": 1650.00, "Floor": 3, "Type": 1 },
+    { "Number": "303C", "Rent": 2300.00, "Floor": 3, "Type": 3, "ResponsibleCpf": "88888888888" },
 
-    { "Number": "401A", "Rent": 2400.00, "Floor": 4, "Type": 1 },
-    { "Number": "402B", "Rent": 1700.00, "Floor": 4, "Type": 0, "ResponsibleCpf": "33333333333" },
-    { "Number": "403C", "Rent": 2450.00, "Floor": 4, "Type": 2 },
+    { "Number": "401A", "Rent": 2400.00, "Floor": 4, "Type": 2 },
+    { "Number": "402B", "Rent": 1700.00, "Floor": 4, "Type": 1, "ResponsibleCpf": "33333333333" },
+    { "Number": "403C", "Rent": 2450.00, "Floor": 4, "Type": 3 },
 
-    { "Number": "S01",  "Rent": 3000.00, "Floor": 5, "Type": 1 },
-    { "Number": "K1",   "Rent": 1200.00, "Floor": 6, "Type": 0 }
+    { "Number": "S01",  "Rent": 3000.00, "Floor": 5, "Type": 2 },
+    { "Number": "K1",   "Rent": 1200.00, "Floor": 6, "Type": 1 }
   ]
 }
