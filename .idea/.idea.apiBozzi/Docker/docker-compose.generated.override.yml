@@ -16,7 +16,7 @@ services:
     image: "apibozzi:dev"
     ports: []
     volumes:
-    - "C:\\Users\\denno\\RiderProjects\\apiBozzi:/app:rw"
-    - "C:\\Users\\denno\\RiderProjects\\apiBozzi:/src:rw"
     - "C:\\Users\\denno\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\denno\\RiderProjects\\apibozzi:/app:rw"
+    - "C:\\Users\\denno\\RiderProjects\\apiBozzi:/src:rw"
     working_dir: "/app"

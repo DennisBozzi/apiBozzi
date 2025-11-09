@@ -4,6 +4,7 @@ using apiBozzi.Models;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Models.FelicianoBozzi;
 using apiBozzi.Models.Responses;
+using apiBozzi.Services.Firebase;
 using apiBozzi.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ namespace apiBozzi.Services.FelicianoBozzi;
 public class TenantService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
     private readonly ApartmentService _apartmentService = serviceProvider.GetRequiredService<ApartmentService>();
+    private readonly FirebaseUserProvider _userProvider = serviceProvider.GetRequiredService<FirebaseUserProvider>();
+    private bool IsAdmin => _userProvider.IsAdmin;
 
     #region Main
 
@@ -45,7 +48,7 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
     public async Task<PagedResult<TenantResponse>> ListTenants(TenantFilter filter)
     {
         var apartments = new List<Apartment>();
-        
+
         var query = Context.Apartments
             .Include(x => x.Responsible)
             .Where(x => x.Responsible != null);
@@ -106,33 +109,66 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
     public async Task<PagedResult<TenantResponse>> ListResponsibleTenants(TenantFilter filter)
     {
-        var totalItems = await Context.Tenants.CountAsync();
-
-        var tenants = Context.Tenants
-            .Where(x => x.Responsible == null)
-            .Skip((filter.Page - 1) * filter.PageSize)
-            .Take(filter.PageSize);
-
-        if (filter.NameCpf != null)
-            tenants = tenants.Where(x =>
-                x.FirstName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
-                x.LastName.ToLower().StartsWith(filter.NameCpf.ToLower()));
-
-        var items = await tenants.Include(x => x.Responsible)
-            .OrderBy(x => x.CreatedAt)
-            .Select(x => new TenantResponse(x, true))
-            .ToListAsync();
-
-        var result = new PagedResult<TenantResponse>
+        if (IsAdmin)
         {
-            Items = items,
-            TotalItems = totalItems,
-            CurrentPage = filter.Page,
-            PageSize = filter.PageSize,
-            TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
-        };
+            var totalItems = await Context.Tenants.CountAsync();
 
-        return result;
+            var tenants = Context.Tenants
+                .Where(x => x.Responsible == null)
+                .Skip((filter.Page - 1) * filter.PageSize)
+                .Take(filter.PageSize);
+
+            if (filter.NameCpf != null)
+                tenants = tenants.Where(x =>
+                    x.FirstName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
+                    x.LastName.ToLower().StartsWith(filter.NameCpf.ToLower()));
+
+            var items = await tenants.Include(x => x.Responsible)
+                .OrderBy(x => x.CreatedAt)
+                .Select(x => new TenantResponse(x, true))
+                .ToListAsync();
+
+            var result = new PagedResult<TenantResponse>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                CurrentPage = filter.Page,
+                PageSize = filter.PageSize,
+                TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
+            };
+
+            return result;
+        }
+        else
+        {
+            var totalItems = await Context.TenantsDemo.CountAsync();
+
+            var tenants = Context.TenantsDemo
+                .Where(x => x.Responsible == null)
+                .Skip((filter.Page - 1) * filter.PageSize)
+                .Take(filter.PageSize);
+
+            if (filter.NameCpf != null)
+                tenants = tenants.Where(x =>
+                    x.FirstName.ToLower().StartsWith(filter.NameCpf.ToLower()) ||
+                    x.LastName.ToLower().StartsWith(filter.NameCpf.ToLower()));
+
+            var items = await tenants.Include(x => x.Responsible)
+                .OrderBy(x => x.CreatedAt)
+                .Select(x => new TenantResponse(x, true))
+                .ToListAsync();
+
+            var result = new PagedResult<TenantResponse>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                CurrentPage = filter.Page,
+                PageSize = filter.PageSize,
+                TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
+            };
+
+            return result;
+        }
     }
 
     public async Task<TenantResponse> GetOneTenantAsync(int id)
@@ -164,6 +200,8 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
 
     #endregion
 
+    #region Private
+
     private async Task ValidateTenant(NewTenant dto)
     {
         if (!dto.Cpf.IsValidCpf())
@@ -187,4 +225,6 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
     {
         return 0;
     }
+
+    #endregion
 }

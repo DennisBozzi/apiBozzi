@@ -329,6 +329,8 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
 
     #endregion
 
+    #region Private
+
     private void _ExistApartment(string numero)
     {
         var existeAp = Context.Apartments.Any(x => x.Number.ToLower().Equals(numero.ToLower()));
@@ -390,4 +392,6 @@ public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(se
         if (ap.IsEmpty())
             throw new ValidationException("O apartamento não foi encontrado.");
     }
+
+    #endregion
 }
