@@ -20,13 +20,10 @@ public class DemoController : ControllerBase
         _env = env;
         _userProvider = userProvider;
     }
-    
+
     [HttpPost("ResetDemo")]
     public async Task<IActionResult> ResetDemo()
     {
-        if (!_userProvider.IsAdmin)
-            return Forbid();
-
         var path = Path.Combine(_env.ContentRootPath, "Utils/demo-seed.json");
         try
         {
