@@ -12,8 +12,7 @@ namespace apiBozzi.Services.FelicianoBozzi;
 
 public class ApartmentService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    private readonly FirebaseUserProvider _userProvider = serviceProvider.GetRequiredService<FirebaseUserProvider>();
-    private bool IsAdmin => _userProvider.IsAdmin;
+    private bool IsAdmin => UserProvider.IsAdmin;
 
     #region Main
 

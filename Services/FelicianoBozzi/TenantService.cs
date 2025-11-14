@@ -12,9 +12,7 @@ namespace apiBozzi.Services.FelicianoBozzi;
 
 public class TenantService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    private readonly ApartmentService _apartmentService = serviceProvider.GetRequiredService<ApartmentService>();
-    private readonly FirebaseUserProvider _userProvider = serviceProvider.GetRequiredService<FirebaseUserProvider>();
-    private bool IsAdmin => _userProvider.IsAdmin;
+    private bool IsAdmin => UserProvider.IsAdmin;
 
     #region Main
 
@@ -34,7 +32,7 @@ public class TenantService(IServiceProvider serviceProvider) : ServiceBase(servi
             var res = await Context.Tenants.AddAsync(newTenant);
             await Context.SaveChangesAsync();
             if (dto.ApartmentId > 0)
-                await _apartmentService.MakeResponsible(dto.ApartmentId, res.Entity.Id);
+                await ApartmentService.MakeResponsible(dto.ApartmentId, res.Entity.Id);
             await transaction.CommitAsync();
             return new TenantResponse(res.Entity);
         }
