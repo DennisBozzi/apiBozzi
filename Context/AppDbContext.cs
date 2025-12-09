@@ -1,7 +1,10 @@
-﻿using apiBozzi.Models.FelicianoBozzi;
+﻿using apiBozzi.Models;
+using apiBozzi.Models.FelicianoBozzi;
 using Microsoft.EntityFrameworkCore;
 
 namespace apiBozzi.Context;
+
+using File = apiBozzi.Models.File;
 
 public class AppDbContext : DbContext
 {
@@ -10,8 +13,9 @@ public class AppDbContext : DbContext
     }
 
     // Feliciano Bozzi
-    public DbSet<Apartment> Apartments { get; set; }
-    public DbSet<ApartmentDemo> ApartmentsDemo { get; set; }
+    public DbSet<File> Files { get; set; }
+    public DbSet<Unit> Units { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
-    public DbSet<TenantDemo> TenantsDemo { get; set; }
+    public DbSet<Contract> Contracts { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 }

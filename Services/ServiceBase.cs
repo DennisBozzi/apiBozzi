@@ -1,4 +1,6 @@
 ﻿using apiBozzi.Context;
+using apiBozzi.Services.FelicianoBozzi;
+using apiBozzi.Services.Firebase;
 
 namespace apiBozzi.Services;
 
@@ -9,8 +11,17 @@ public abstract class ServiceBase(IServiceProvider serviceProvider) : ServiceCol
     
     private HttpClient? _httpClient;
     private AppDbContext? _context;
+    private FirebaseUserProvider? _userProvider;
+    private FirebaseService? _firebaseService;
+    private UnitService? _apartmentService;
+    private TenantService? _tenantService;
+    
     protected HttpClient HttpClient => _httpClient ??= ServiceProvider.GetRequiredService<HttpClient>();
     protected AppDbContext Context => _context ??= ServiceProvider.GetRequiredService<AppDbContext>();
+    protected FirebaseUserProvider UserProvider => _userProvider = ServiceProvider.GetRequiredService<FirebaseUserProvider>();
+    protected FirebaseService FirebaseService => _firebaseService = ServiceProvider.GetRequiredService<FirebaseService>();
+    protected UnitService UnitService=> _apartmentService = serviceProvider.GetRequiredService<UnitService>();
+    protected TenantService TenantService=> _tenantService = serviceProvider.GetRequiredService<TenantService>();
 
     private IServiceProvider ServiceProvider { get; } = serviceProvider;
 }

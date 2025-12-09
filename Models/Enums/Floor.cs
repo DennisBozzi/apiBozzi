@@ -1,6 +1,6 @@
 ﻿namespace apiBozzi.Models.Enums;
 
-public enum FloorEnum
+public enum Floor
 {
     First = 1,
     Second = 2,

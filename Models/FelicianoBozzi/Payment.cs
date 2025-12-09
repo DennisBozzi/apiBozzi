@@ -4,18 +4,18 @@ using apiBozzi.Models.Enums;
 
 namespace apiBozzi.Models.FelicianoBozzi;
 
-public class ApartmentDemo
+public class Payment
 {
     [Key] public int Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
-    [Required] [MaxLength(10)] public string Number { get; set; } = string.Empty;
+    public DateTime Competence { get; set; }
+    public DateTime? PaidAt { get; set; }
+    public string Note { get; set; }
+    public StatusPayment Status { get; set; }
+    public PaymentType Type { get; set; }
+    [Required] private Contract Contract { get; set; }
 
     [Required]
     [Column(TypeName = "decimal(10,2)")]
-    public decimal Rent { get; set; }
-
-    [Required] public FloorEnum Floor { get; set; }
-
-    [Required] public ApartmentTypeEnum Type { get; set; }
-    public TenantDemo? Responsible { get; set; }
+    public decimal Value { get; set; }
 }

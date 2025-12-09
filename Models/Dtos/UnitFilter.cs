@@ -1,6 +1,6 @@
 ﻿namespace apiBozzi.Models.Dtos;
 
-public class ApartmentFilter : PagedFilter
+public class UnitFilter : PagedFilter
 {
     public string? Number { get; set; }
 }
