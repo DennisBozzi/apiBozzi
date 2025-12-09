@@ -158,7 +158,7 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
             arquivo.FileName = novoFile.FileName;
             arquivo.FileSize = novoFile.FileSize;
             arquivo.ContentType = novoFile.ContentType;
-            arquivo.UploadedAt = novoFile.UploadedAt;
+            arquivo.CreatedAt = novoFile.CreatedAt;
 
             return await UpdateFileAsync(arquivo);
         }

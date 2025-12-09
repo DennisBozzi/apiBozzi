@@ -2,10 +2,9 @@
 
 namespace apiBozzi.Models.Dtos;
 
-public class NewApartment
+public class NewUnit
 {
     [Required] public string Number { get; set; }
     [Required] public int Floor { get; set; }
     [Required] public int Type { get; set; }
-    [Required] public decimal RentValue { get; set; }
 }

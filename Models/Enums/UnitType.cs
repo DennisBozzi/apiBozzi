@@ -1,6 +1,6 @@
 ﻿namespace apiBozzi.Models.Enums;
 
-public enum ApartmentTypeEnum
+public enum UnitType
 {
     Apartment = 1,
     Kitnet = 2,

@@ -34,7 +34,7 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
                 Url = url,
                 FileSize = fileStream.Length,
                 ContentType = GetContentType(fileName),
-                UploadedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
         }
         catch (Exception ex)
