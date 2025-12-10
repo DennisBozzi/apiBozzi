@@ -17,6 +17,8 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
+app.UseCors("AllowSpecificOrigins");
+
 app.ConfigureMiddlewares(app.Environment);
 
 app.UseHttpsRedirection();
