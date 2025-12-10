@@ -28,6 +28,8 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
             .OrderBy(x => x.Number)
             .Select(x => new UnitResponse(x));
 
+        //TODO: Retornar rent dos apartamentos
+        
         if (query.Any())
             units = await query.ToListAsync();
 

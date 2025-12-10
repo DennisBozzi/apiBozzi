@@ -43,13 +43,14 @@ public static class ServiceConfiguration
 
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowAllOrigins",
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
+            options.AddPolicy("AllowSpecificOrigins", policy =>
+            {
+                policy
+                    .WithOrigins("http://localhost:4200", "https://espbozzi.web.app")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
         });
 
         services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
