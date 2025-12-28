@@ -1,4 +1,5 @@
-﻿using apiBozzi.Models.FelicianoBozzi;
+﻿using apiBozzi.Models.Enums;
+using apiBozzi.Models.FelicianoBozzi;
 using apiBozzi.Utils;
 
 namespace apiBozzi.Models.Responses;
@@ -13,6 +14,7 @@ public class TenantResponse
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public DateTime? Born { get; set; }
+    public Gender? Gender { get; set; }
 
     public TenantResponse(Tenant value)
     {
@@ -24,5 +26,6 @@ public class TenantResponse
         Email = value.Email;
         Phone = value.Phone;
         Born = value.Born;
+        Gender = value.Gender;
     }
 }

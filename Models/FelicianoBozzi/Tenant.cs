@@ -21,5 +21,6 @@ public class Tenant : Person
         Email = dto.Email;
         Phone = dto.Phone;
         Born = dto.Born;
+        Gender = dto.Gender;
     }
 }

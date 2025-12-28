@@ -12,7 +12,7 @@ using apiBozzi.Context;
 namespace apiBozzi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251208235007_CreatingDb")]
+    [Migration("20251228230855_CreatingDb")]
     partial class CreatingDb
     {
         /// <inheritdoc />
@@ -130,6 +130,9 @@ namespace apiBozzi.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .IsRequired()
