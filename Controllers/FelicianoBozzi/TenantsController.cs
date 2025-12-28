@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using apiBozzi.Configurations.Transaction;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Services.FelicianoBozzi;
 using Microsoft.AspNetCore.Authorization;
@@ -17,64 +18,54 @@ public class TenantsController : ControllerBase
     {
         _tenants = tenants;
     }
-    //
-    // [HttpPost]
-    // public async Task<IActionResult> AddTenant([FromBody] NewTenant dto)
-    // {
-    //     try
-    //     {
-    //         var tenant = await _tenants.AddTenant(dto);
-    //         return Ok(tenant);
-    //     }
-    //     catch (ValidationException e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
-    //
-    // [HttpGet]
-    // public async Task<IActionResult> ListTenants([FromQuery] TenantFilter filter)
-    // {
-    //     try
-    //     {
-    //         var tenant = await _tenants.ListTenants(filter);
-    //         return Ok(tenant);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
-    //
-    // [HttpGet("Responsibles")]
-    // public async Task<IActionResult> ListResponsibleTenant([FromQuery] TenantFilter filter)
-    // {
-    //     try
-    //     {
-    //         var tenant = await _tenants.ListResponsibleTenants(filter);
-    //         return Ok(tenant);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
-    //
-    // [HttpGet("{id}")]
-    // public async Task<IActionResult> GetOneTenantAsync(int id)
-    // {
-    //     try
-    //     {
-    //         var tenant = await _tenants.GetOneTenantAsync(id);
-    //         return Ok(tenant);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
+
+    [HttpPost]
+    [Transaction]
+    public async Task<IActionResult> AddTenant([FromBody] NewTenant dto)
+    {
+        try
+        {
+            var tenant = await _tenants.AddTenant(dto);
+            return Ok(tenant);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> ListTenants([FromQuery] TenantFilter filter)
+    {
+        try
+        {
+            var tenant = await _tenants.ListTenants(filter);
+            return Ok(tenant);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTenantById(int id)
+    {
+        try
+        {
+            var ten = await _tenants.GetTenantById(id);
+
+            if (ten == null) return NotFound();
+
+            return Ok(ten);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
 }

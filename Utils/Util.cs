@@ -40,7 +40,7 @@ public static class Util
         return !IsEmpty(source);
     }
 
-    public static bool IsValidCpf(this string cpf)
+    public static bool IsValidCpf(this string? cpf)
     {
         // Remove formatação
         cpf = cpf.Replace(".", "").Replace("-", "");
@@ -78,7 +78,7 @@ public static class Util
         return digits[10] == secondDigit;
     }
 
-    public static bool IsValidEmail(this string email)
+    public static bool IsValidEmail(this string? email)
     {
         var validator = new InlineValidator<string>();
         validator.RuleFor(x => x).EmailAddress();

@@ -13,7 +13,6 @@ public class TenantResponse
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public DateTime? Born { get; set; }
-    public UnitResponse? Apartment { get; set; }
 
     public TenantResponse(Tenant value)
     {
@@ -25,11 +24,5 @@ public class TenantResponse
         Email = value.Email;
         Phone = value.Phone;
         Born = value.Born;
-    }
-
-    public TenantResponse WithApartment(Unit ap)
-    {
-        Apartment = new UnitResponse(ap);
-        return this;
     }
 }

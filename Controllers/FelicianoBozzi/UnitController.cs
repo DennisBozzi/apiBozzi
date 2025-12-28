@@ -1,4 +1,5 @@
-﻿using apiBozzi.Exceptions;
+﻿using apiBozzi.Configurations.Transaction;
+using apiBozzi.Exceptions;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Services.FelicianoBozzi;
 using Microsoft.AspNetCore.Authorization;
@@ -31,22 +32,8 @@ public class UnitController : ControllerBase
         }
     }
 
-    // [HttpGet("Available")]
-    // public async Task<IActionResult> ListAvailableApartments([FromQuery] ApartmentFilter apartmentFiltro)
-    // {
-    //     try
-    //     {
-    //         var apartments = await _apartment.ListAvailableApartments(apartmentFiltro);
-    //         return Ok(apartments);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
-
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetOneApartmentById(int id)
+    public async Task<IActionResult> GetUnitById(int id)
     {
         try
         {
@@ -62,25 +49,8 @@ public class UnitController : ControllerBase
         }
     }
 
-    // [HttpGet("number/{number}")]
-    // public async Task<IActionResult> GetOneApartmentByNumber(string number)
-    // {
-    //     try
-    //     {
-    //         var ap = await _apartment.GetApartmentByNumber(number);
-    //         return Ok(ap);
-    //     }
-    //     catch (ValidationException e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
-
     [HttpPost]
+    [Transaction]
     public async Task<IActionResult> AddUnit(NewUnit value)
     {
         try

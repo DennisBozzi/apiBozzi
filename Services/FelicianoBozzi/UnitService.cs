@@ -14,8 +14,6 @@ namespace apiBozzi.Services.FelicianoBozzi;
 
 public class UnitService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    private bool IsAdmin => UserProvider.IsAdmin;
-
     #region Main
 
     public async Task<PagedResult<UnitResponse>> ListUnits(UnitFilter unitFilter)
@@ -53,64 +51,6 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
         return unit == null ? null : new UnitResponse(unit);
     }
 
-    // public async Task<PagedResult<ApartmentResponse>> ListAvailableApartments(ApartmentFilter filter)
-    // {
-    //     if (IsAdmin)
-    //     {
-    //         var apartments = Context.Apartments.AsQueryable();
-    //
-    //         if (filter.Number != null)
-    //             apartments = apartments.Where(x => x.Number.ToLower().Contains(filter.Number.ToLower()));
-    //
-    //         var items = await apartments
-    //             .Skip((filter.Page - 1) * filter.PageSize)
-    //             .Take(filter.PageSize)
-    //             .OrderBy(x => x.CreatedAt)
-    //             .Select(x => new ApartmentResponse(x))
-    //             .ToListAsync();
-    //
-    //         var totalItems = items.Count;
-    //
-    //         var res = new PagedResult<ApartmentResponse>
-    //         {
-    //             Items = items,
-    //             TotalItems = totalItems,
-    //             CurrentPage = filter.Page,
-    //             PageSize = filter.PageSize,
-    //             TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
-    //         };
-    //
-    //         return res;
-    //     }
-    //     else
-    //     {
-    //         var apartments = Context.ApartmentsDemo.AsQueryable();
-    //
-    //         if (filter.Number != null)
-    //             apartments = apartments.Where(x => x.Number.ToLower().Contains(filter.Number.ToLower()));
-    //
-    //         var items = await apartments
-    //             .Skip((filter.Page - 1) * filter.PageSize)
-    //             .Take(filter.PageSize)
-    //             .OrderBy(x => x.CreatedAt)
-    //             .Select(x => new ApartmentResponse(x))
-    //             .ToListAsync();
-    //
-    //         var totalItems = items.Count;
-    //
-    //         var res = new PagedResult<ApartmentResponse>
-    //         {
-    //             Items = items,
-    //             TotalItems = totalItems,
-    //             CurrentPage = filter.Page,
-    //             PageSize = filter.PageSize,
-    //             TotalPages = (int)Math.Ceiling((double)totalItems / filter.PageSize)
-    //         };
-    //
-    //         return res;
-    //     }
-    // }
-
     public async Task<UnitResponse> AddUnit(NewUnit value)
     {
         _ExistUnit(value.Number);
@@ -123,113 +63,9 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
         };
 
         var res = await Context.Units.AddAsync(newUni);
-        await Context.SaveChangesAsync();
 
         return new UnitResponse(res.Entity);
     }
-
-    // public async Task<ApartmentResponse> MakeResponsible(int idApartment, int idTenant)
-    // {
-    //     if (IsAdmin)
-    //     {
-    //         var ap = await Context.Apartments.FirstOrDefaultAsync(x => x.Id == idApartment);
-    //         var ten = await Context.Tenants.FirstOrDefaultAsync(x => x.Id == idTenant);
-    //
-    //         _ValidateMakeResponsible(ap, ten);
-    //
-    //         await Context.SaveChangesAsync();
-    //
-    //         return new ApartmentResponse(ap);
-    //     }
-    //     else
-    //     {
-    //         var ap = await Context.ApartmentsDemo.FirstOrDefaultAsync(x => x.Id == idApartment);
-    //         var ten = await Context.TenantsDemo.FirstOrDefaultAsync(x => x.Id == idTenant);
-    //
-    //         _ValidateMakeResponsible(ap, ten);
-    //
-    //         await Context.SaveChangesAsync();
-    //
-    //         return new ApartmentResponse(ap);
-    //     }
-    // }
-
-    // public async Task<ApartmentResponse> RemoveResponsible(int idApartment)
-    // {
-    //     if (IsAdmin)
-    //     {
-    //         var ap = await Context.Apartments.FirstOrDefaultAsync(x => x.Id == idApartment);
-    //
-    //         _ValidateRemoveResponsible(ap);
-    //
-    //         await Context.SaveChangesAsync();
-    //
-    //         return new ApartmentResponse(ap);
-    //     }
-    //     else
-    //     {
-    //         var ap = await Context.ApartmentsDemo.FirstOrDefaultAsync(x => x.Id == idApartment);
-    //
-    //         _ValidateRemoveResponsible(ap);
-    //
-    //         await Context.SaveChangesAsync();
-    //
-    //         return new ApartmentResponse(ap);
-    //     }
-    // }
-
-    // public async Task<ApartmentResponse> GetApartmentById(int idApartment)
-    // {
-    //     if (IsAdmin)
-    //     {
-    //         var apartment = await Context.Apartments.FirstOrDefaultAsync(x => x.Id == idApartment);
-    //
-    //         if (apartment == null)
-    //             throw new ValidationException("O apartamento não foi encontrado.");
-    //
-    //         var res = new ApartmentResponse(apartment);
-    //
-    //         return res;
-    //     }
-    //     else
-    //     {
-    //         var apartment = await Context.ApartmentsDemo.FirstOrDefaultAsync(x => x.Id == idApartment);
-    //
-    //         if (apartment == null)
-    //             throw new ValidationException("O apartamento não foi encontrado.");
-    //
-    //         var res = new ApartmentResponse(apartment);
-    //         
-    //         return res;
-    //     }
-    // }
-
-    // public async Task<ApartmentResponse> GetApartmentByNumber(string numberApartment)
-    // {
-    //     if (IsAdmin)
-    //     {
-    //         var apartment = await Context.Apartments.FirstOrDefaultAsync(x => x.Number.ToUpper().Equals(numberApartment.ToUpper()));
-    //
-    //         if (apartment == null)
-    //             throw new ValidationException("O apartamento não foi encontrado.");
-    //
-    //         var res = new ApartmentResponse(apartment);
-    //
-    //         return res;
-    //     }
-    //     else
-    //     {
-    //         var apartment = await Context.ApartmentsDemo.FirstOrDefaultAsync(x => x.Number.ToUpper().Equals(numberApartment.ToUpper()));
-    //
-    //         if (apartment == null)
-    //             throw new ValidationException("O apartamento não foi encontrado.");
-    //
-    //         var res = new ApartmentResponse(apartment);
-    //
-    //         return res;
-    //     }
-    // }
-    //
 
     #endregion
 
@@ -239,7 +75,7 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
     {
         var existeAp = Context.Units.Any(x => x.Number.ToLower().Equals(number.ToLower()));
         if (existeAp)
-            throw new ValidationException("Já existe um apartamento com esse número.");
+            throw new ValidationException("A unit with the specified number already exists.");
     }
 
     #endregion

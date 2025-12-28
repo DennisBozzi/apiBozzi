@@ -1,4 +1,4 @@
-﻿using apiBozzi.Context;
+﻿﻿using apiBozzi.Context;
 using apiBozzi.Services;
 using apiBozzi.Services.FelicianoBozzi;
 using apiBozzi.Services.Firebase;
@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using apiBozzi.Configurations.Transaction;
+using apiBozzi.Services.Uow;
 
 namespace apiBozzi.Configurations;
 
@@ -37,6 +39,9 @@ public static class ServiceConfiguration
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
+        
+        services.AddScoped<UnitOfWorkService>();
+        services.AddScoped<TransactionFilter>();
 
         services.AddHttpContextAccessor();
         services.AddScoped<FirebaseUserProvider>();
