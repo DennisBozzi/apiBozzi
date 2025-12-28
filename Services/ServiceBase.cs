@@ -20,8 +20,8 @@ public abstract class ServiceBase(IServiceProvider serviceProvider) : ServiceCol
     protected AppDbContext Context => _context ??= ServiceProvider.GetRequiredService<AppDbContext>();
     protected FirebaseUserProvider UserProvider => _userProvider = ServiceProvider.GetRequiredService<FirebaseUserProvider>();
     protected FirebaseService FirebaseService => _firebaseService = ServiceProvider.GetRequiredService<FirebaseService>();
-    protected UnitService UnitService=> _apartmentService = serviceProvider.GetRequiredService<UnitService>();
-    protected TenantService TenantService=> _tenantService = serviceProvider.GetRequiredService<TenantService>();
+    protected UnitService UnitService => _apartmentService = serviceProvider.GetRequiredService<UnitService>();
+    protected TenantService TenantService => _tenantService = serviceProvider.GetRequiredService<TenantService>();
 
     private IServiceProvider ServiceProvider { get; } = serviceProvider;
 }

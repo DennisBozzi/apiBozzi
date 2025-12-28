@@ -17,7 +17,7 @@ public class UnitController : ControllerBase
     {
         _unit = unit;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> ListUnits([FromQuery] UnitFilter unitFilter)
     {
@@ -45,23 +45,22 @@ public class UnitController : ControllerBase
     //     }
     // }
 
-    // [HttpGet("{id}")]
-    // public async Task<IActionResult> GetOneApartmentById(int id)
-    // {
-    //     try
-    //     {
-    //         var ap = await _apartment.GetApartmentById(id);
-    //         return Ok(ap);
-    //     }
-    //     catch (ValidationException e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
-    //     }
-    // }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetOneApartmentById(int id)
+    {
+        try
+        {
+            var uni = await _unit.GetUnitById(id);
+
+            if (uni == null) return NotFound();
+
+            return Ok(uni);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+        }
+    }
 
     // [HttpGet("number/{number}")]
     // public async Task<IActionResult> GetOneApartmentByNumber(string number)
@@ -80,7 +79,7 @@ public class UnitController : ControllerBase
     //         return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
     //     }
     // }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddUnit(NewUnit value)
     {

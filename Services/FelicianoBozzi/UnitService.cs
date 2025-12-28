@@ -1,4 +1,5 @@
-﻿using apiBozzi.Exceptions;
+﻿using System.Globalization;
+using apiBozzi.Exceptions;
 using apiBozzi.Models;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Models.Enums;
@@ -6,6 +7,7 @@ using apiBozzi.Models.FelicianoBozzi;
 using apiBozzi.Models.Responses;
 using apiBozzi.Services.Firebase;
 using apiBozzi.Utils;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace apiBozzi.Services.FelicianoBozzi;
@@ -28,8 +30,8 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
             .OrderBy(x => x.Number)
             .Select(x => new UnitResponse(x));
 
-        //TODO: Retornar rent dos apartamentos
-        
+        //TODO: Retornar rent das unidades
+
         if (query.Any())
             units = await query.ToListAsync();
 
@@ -43,6 +45,12 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
         };
 
         return res;
+    }
+
+    public async Task<UnitResponse?> GetUnitById(int id)
+    {
+        var unit = await Context.Units.FirstOrDefaultAsync(x => x.Id == id);
+        return unit == null ? null : new UnitResponse(unit);
     }
 
     // public async Task<PagedResult<ApartmentResponse>> ListAvailableApartments(ApartmentFilter filter)
@@ -225,7 +233,6 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
 
     #endregion
 
-
     #region Private
 
     private void _ExistUnit(string number)
@@ -234,44 +241,6 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
         if (existeAp)
             throw new ValidationException("Já existe um apartamento com esse número.");
     }
-
-    // private void _ExistApartmentDemo(string numero)
-    // {
-    //     var existeAp = Context.ApartmentsDemo.Any(x => x.Number.ToLower().Equals(numero.ToLower()));
-    //     if (existeAp)
-    //         throw new ValidationException("Já existe um apartamento demo com esse número.");
-    // }
-    //
-    // private void _ValidateMakeResponsible(Apartment? ap, Tenant? ten)
-    // {
-    //     if (ten.IsEmpty())
-    //         throw new ValidationException("O inquilino não foi encontrado.");
-    //
-    //     if (ap.IsEmpty())
-    //         throw new ValidationException("O apartamento não foi encontrado.");
-    // }
-    //
-    // private void _ValidateMakeResponsible(ApartmentDemo? ap, TenantDemo? ten)
-    // {
-    //     if (ten.IsEmpty())
-    //         throw new ValidationException("O inquilino não foi encontrado.");
-    //
-    //     if (ap.IsEmpty())
-    //         throw new ValidationException("O apartamento não foi encontrado.");
-    // }
-    //
-    // private void _ValidateRemoveResponsible(Apartment? ap)
-    // {
-    //     if (ap.IsEmpty())
-    //         throw new ValidationException("O apartamento não foi encontrado.");
-    // }
-    //
-    // private void _ValidateRemoveResponsible(ApartmentDemo? ap)
-    // {
-    //     if (ap.IsEmpty())
-    //         throw new ValidationException("O apartamento não foi encontrado.");
-    // }
-    //
 
     #endregion
 }
