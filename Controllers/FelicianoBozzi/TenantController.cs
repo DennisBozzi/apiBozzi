@@ -10,15 +10,29 @@ namespace apiBozzi.Controllers.FelicianoBozzi;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class TenantsController : ControllerBase
+public class TenantController : ControllerBase
 {
     private readonly TenantService _tenants;
 
-    public TenantsController(TenantService tenants)
+    public TenantController(TenantService tenants)
     {
         _tenants = tenants;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> ListTenants([FromQuery] TenantFilter filter)
+    {
+        try
+        {
+            var tenant = await _tenants.ListTenants(filter);
+            return Ok(tenant);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
+    
     [HttpPost]
     [Transaction]
     public async Task<IActionResult> AddTenant([FromBody] NewTenant dto)
@@ -31,20 +45,6 @@ public class TenantsController : ControllerBase
         catch (ValidationException e)
         {
             return BadRequest(e.Message);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(500, $"Server error: ${e.Message}");
-        }
-    }
-    
-    [HttpGet]
-    public async Task<IActionResult> ListTenants([FromQuery] TenantFilter filter)
-    {
-        try
-        {
-            var tenant = await _tenants.ListTenants(filter);
-            return Ok(tenant);
         }
         catch (Exception e)
         {
