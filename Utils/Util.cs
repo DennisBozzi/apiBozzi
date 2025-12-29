@@ -86,4 +86,14 @@ public static class Util
         var result = validator.Validate(email);
         return result.IsValid;
     }
+
+    public static DateTime? ToUtcDateTime(this DateTime? dateTime)
+    {
+        if (!dateTime.HasValue)
+            return null;
+
+        return dateTime.Value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc)
+            : dateTime.Value;
+    }
 }

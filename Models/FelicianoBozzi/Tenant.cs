@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using apiBozzi.Models.Dtos;
+using apiBozzi.Utils;
 
 namespace apiBozzi.Models.FelicianoBozzi;
 
@@ -20,7 +21,7 @@ public class Tenant : Person
         Cpf = dto.Cpf;
         Email = dto.Email;
         Phone = dto.Phone;
-        Born = dto.Born;
         Gender = dto.Gender;
+        Born = dto.Born.ToUtcDateTime();
     }
 }
