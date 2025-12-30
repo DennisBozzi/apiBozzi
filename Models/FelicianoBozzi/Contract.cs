@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using apiBozzi.Models.Dtos;
 using apiBozzi.Models.Enums;
 
 namespace apiBozzi.Models.FelicianoBozzi;
@@ -11,11 +12,24 @@ public class Contract
     public DateTime ValidUntil { get; set; }
     public int PaymnetDay { get; set; }
     public StatusContract Status { get; set; }
-    public File File { get; set; }
-    [Required] public Tenant? Responsible { get; set; }
+    public File? File { get; set; }
+    [Required] public Tenant Tenant { get; set; }
     [Required] public Unit Unit { get; set; }
 
     [Required]
     [Column(TypeName = "decimal(10,2)")]
     public decimal Rent { get; set; }
+
+    public Contract()
+    {
+    }
+
+    public Contract(NewContract dto)
+    {
+        ValidUntil = dto.ValidUntil;
+        PaymnetDay = dto.PaymnetDay;
+        Tenant = dto.Tenant;
+        Unit = dto.Unit;
+        Rent = dto.Rent;
+    }
 }
