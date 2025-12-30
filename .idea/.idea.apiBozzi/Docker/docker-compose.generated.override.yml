@@ -3,7 +3,7 @@ version: "3.8"
 services:
   api:
     build:
-      context: "C:\\Users\\denno\\RiderProjects\\apiBozzi"
+      context: "C:\\Projetos\\apiBozzi"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -16,7 +16,7 @@ services:
     image: "apibozzi:dev"
     ports: []
     volumes:
-    - "C:\\Users\\denno\\RiderProjects\\apiBozzi:/app:rw"
-    - "C:\\Users\\denno\\RiderProjects\\apiBozzi:/src:rw"
+    - "C:\\Projetos\\apiBozzi:/app:rw"
+    - "C:\\Projetos\\apiBozzi:/src:rw"
     - "C:\\Users\\denno\\.nuget\\packages:/home/app/.nuget/packages"
     working_dir: "/app"
