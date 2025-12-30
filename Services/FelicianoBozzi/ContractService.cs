@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using apiBozzi.Models.Dtos;
+using apiBozzi.Models.Enums;
 using apiBozzi.Models.FelicianoBozzi;
 using apiBozzi.Models.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,13 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         ValidateContract(dto);
 
         var contract = new Contract(dto);
+        contract.Status = StatusContract.Active;
+
         //TODO: Criar o Contrato (File) antes de salvar.
 
         Context.Contracts.Add(contract);
 
-        return new ContractResponse();
+        return new ContractResponse(contract);
     }
 
     #endregion
