@@ -26,6 +26,10 @@ public class UnitController : ControllerBase
         {
             return Ok(await _unit.ListUnits(unitFilter));
         }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
         catch (Exception e)
         {
             return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
@@ -42,6 +46,10 @@ public class UnitController : ControllerBase
             if (uni == null) return NotFound();
 
             return Ok(uni);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
         }
         catch (Exception e)
         {

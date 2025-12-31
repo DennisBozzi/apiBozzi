@@ -1,4 +1,5 @@
-﻿using apiBozzi.Models;
+﻿using System;
+using apiBozzi.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace apiBozzi.Services.Firebase;
@@ -17,4 +18,21 @@ public class FirebaseUserProvider
         : null;
 
     public bool IsAdmin => Current?.Admin ?? false;
+
+    public string? AuthToken
+    {
+        get
+        {
+            var header = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrWhiteSpace(header))
+            {
+                return null;
+            }
+
+            const string bearerPrefix = "Bearer ";
+            return header.StartsWith(bearerPrefix, StringComparison.OrdinalIgnoreCase)
+                ? header[bearerPrefix.Length..].Trim()
+                : header;
+        }
+    }
 }

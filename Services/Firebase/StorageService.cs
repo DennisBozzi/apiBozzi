@@ -1,5 +1,7 @@
-﻿using apiBozzi.Models;
+﻿﻿using apiBozzi.Models;
+using apiBozzi.Utils;
 using Firebase.Storage;
+using System.IO;
 
 namespace apiBozzi.Services.Firebase;
 
@@ -7,25 +9,59 @@ using File = Models.File;
 
 public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serviceProvider)
 {
-    private readonly string _bucketName = Environment.GetEnvironmentVariable("FIREBASE_STORAGE_BUCKET") ?? "";
+    private readonly string _bucketName = Environment.GetEnvironmentVariable("FIREBASE_STORAGE_BUCKET") ?? string.Empty;
+
+    private string BucketName
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(_bucketName))
+            {
+                throw new InvalidOperationException(
+                    "The FIREBASE_STORAGE_BUCKET environment variable is not configured.");
+            }
+
+            return _bucketName;
+        }
+    }
+
+    private FirebaseStorage CreateStorage(string token)
+    {
+        return new FirebaseStorage(BucketName, new FirebaseStorageOptions
+        {
+            AuthTokenAsyncFactory = () => Task.FromResult(token)
+        });
+    }
+
+    private string EnsureAuthToken()
+    {
+        var token = UserProvider.AuthToken;
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            throw new InvalidOperationException("Usuário não autenticado: cabeçalho Authorization ausente ou inválido.");
+        }
+
+        return token;
+    }
 
     /// <summary>
     /// Faz upload de um arquivo para o Firebase Storage
     /// </summary>
-    public async Task<File?> UploadFileAsync(Stream fileStream, string fileName)
+    public async Task<File?> UploadFileAsync(Stream fileStream, string fileName, string path = "contracts")
     {
         try
         {
-            var storage = new FirebaseStorage(_bucketName);
+            var token = EnsureAuthToken();
+            var storage = CreateStorage(token);
             var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
 
             await storage
-                .Child("files")
+                .Child(path)
                 .Child(uniqueFileName)
                 .PutAsync(fileStream);
 
             var url =
-                $"https://firebasestorage.googleapis.com/v0/b/{_bucketName}/o/files%2F{Uri.EscapeDataString(uniqueFileName)}?alt=media";
+                $"https://firebasestorage.googleapis.com/v0/b/{_bucketName}/o/{Uri.EscapeDataString(path)}%2F{Uri.EscapeDataString(uniqueFileName)}?alt=media";
 
             return new File
             {
@@ -33,7 +69,7 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
                 FileName = fileName,
                 Url = url,
                 FileSize = fileStream.Length,
-                ContentType = GetContentType(fileName),
+                ContentType = Util.GetContentType(fileName),
                 CreatedAt = DateTime.UtcNow
             };
         }
@@ -50,9 +86,9 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
     {
         try
         {
-            var storage = new FirebaseStorage(_bucketName);
+            var storage = CreateStorage(EnsureAuthToken());
             await storage
-                .Child("files")
+                .Child("contracts")
                 .Child(idStorage)
                 .DeleteAsync();
 
@@ -81,15 +117,42 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
     }
 
     /// <summary>
+    /// Baixa o arquivo do Firebase Storage em memória
+    /// </summary>
+    public async Task<MemoryStream> GetFileStreamAsync(string idStorage, string path = "contracts")
+    {
+        try
+        {
+            var token = EnsureAuthToken();
+            var storage = CreateStorage(token);
+
+            var reference = storage
+                .Child(path)
+                .Child(idStorage);
+
+            var downloadUrl = await reference.GetDownloadUrlAsync();
+            if (string.IsNullOrWhiteSpace(downloadUrl))
+                throw new InvalidOperationException("Não foi possível obter a URL do arquivo.");
+
+            var content = await HttpClient.GetByteArrayAsync(downloadUrl);
+            return new MemoryStream(content);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao baixar arquivo: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
     /// Obtém a URL de download de um arquivo do Firebase Storage
     /// </summary>
     public async Task<string?> GetDownloadUrlAsync(string idStorage)
     {
         try
         {
-            var storage = new FirebaseStorage(_bucketName);
+            var storage = CreateStorage(EnsureAuthToken());
             var link = await storage
-                .Child("files")
+                .Child("contracts")
                 .Child(idStorage)
                 .GetDownloadUrlAsync();
 
@@ -108,9 +171,9 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
     {
         try
         {
-            var storage = new FirebaseStorage(_bucketName);
+            var storage = CreateStorage(EnsureAuthToken());
             await storage
-                .Child("files")
+                .Child("contracts")
                 .Child(idStorage)
                 .GetMetaDataAsync();
 
@@ -120,27 +183,5 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
         {
             return false;
         }
-    }
-
-    /// <summary>
-    /// Obtém o tipo MIME do arquivo baseado na extensão
-    /// </summary>
-    private string GetContentType(string fileName)
-    {
-        var extension = Path.GetExtension(fileName).ToLower();
-        return extension switch
-        {
-            ".pdf" => "application/pdf",
-            ".doc" => "application/msword",
-            ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            ".xls" => "application/vnd.ms-excel",
-            ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            ".jpg" or ".jpeg" => "image/jpeg",
-            ".png" => "image/png",
-            ".gif" => "image/gif",
-            ".txt" => "text/plain",
-            ".zip" => "application/zip",
-            _ => "application/octet-stream"
-        };
     }
 }

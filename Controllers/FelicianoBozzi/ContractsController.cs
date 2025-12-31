@@ -1,4 +1,5 @@
 ﻿using apiBozzi.Configurations.Transaction;
+using apiBozzi.Exceptions;
 using apiBozzi.Models.Dtos;
 using apiBozzi.Services.FelicianoBozzi;
 using Microsoft.AspNetCore.Authorization;
@@ -9,17 +10,16 @@ namespace apiBozzi.Controllers.FelicianoBozzi;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class ContractsController : ControllerBase
+public class ContractController : ControllerBase
 {
     private readonly ContractService _contracts;
 
-    public ContractsController(ContractService contracts)
+    public ContractController(ContractService contracts)
     {
         _contracts = contracts;
     }
 
     [HttpPost]
-    [Authorize]
     [Transaction]
     public async Task<IActionResult> NewContract([FromBody] NewContract dto)
     {
@@ -27,6 +27,65 @@ public class ContractsController : ControllerBase
         {
             var contract = await _contracts.NewContract(dto);
             return Ok(contract);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
+
+    [HttpPost("Model")]
+    [Transaction]
+    public async Task<IActionResult> NewModel(IFormFile file)
+    {
+        try
+        {
+            var res = await _contracts.NewModel(file);
+            return Ok(res);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
+
+    [HttpGet("Model")]
+    public async Task<IActionResult> GetModel()
+    {
+        try
+        {
+            var res = await _contracts.GetModel();
+            return Ok(res);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Server error: ${e.Message}");
+        }
+    }
+
+    [HttpPost("Model/Example")]
+    public async Task<IActionResult> FillModel([FromBody] ContractModelFillRequest request)
+    {
+        try
+        {
+            var (fileName, stream) = await _contracts.FillModelAsync(request);
+            return File(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
         }
         catch (Exception e)
         {

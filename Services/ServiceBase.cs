@@ -15,6 +15,7 @@ public abstract class ServiceBase(IServiceProvider serviceProvider) : ServiceCol
     private FirebaseService? _firebaseService;
     private UnitService? _apartmentService;
     private TenantService? _tenantService;
+    private FileService? _fileService;
     
     protected HttpClient HttpClient => _httpClient ??= ServiceProvider.GetRequiredService<HttpClient>();
     protected AppDbContext Context => _context ??= ServiceProvider.GetRequiredService<AppDbContext>();
@@ -22,6 +23,7 @@ public abstract class ServiceBase(IServiceProvider serviceProvider) : ServiceCol
     protected FirebaseService FirebaseService => _firebaseService = ServiceProvider.GetRequiredService<FirebaseService>();
     protected UnitService UnitService => _apartmentService = serviceProvider.GetRequiredService<UnitService>();
     protected TenantService TenantService => _tenantService = serviceProvider.GetRequiredService<TenantService>();
-
-    private IServiceProvider ServiceProvider { get; } = serviceProvider;
+    protected FileService FileService => _fileService = serviceProvider.GetRequiredService<FileService>();
+    
+    protected IServiceProvider ServiceProvider { get; } = serviceProvider;
 }

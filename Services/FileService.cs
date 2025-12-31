@@ -1,4 +1,5 @@
 ﻿using apiBozzi.Models;
+using apiBozzi.Models.Enums;
 using apiBozzi.Services.Firebase;
 using Microsoft.EntityFrameworkCore;
 
@@ -96,13 +97,36 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
     /// <summary>
     /// Faz upload de arquivo e salva no banco (operação completa)
     /// </summary>
-    public async Task<File?> UploadAndSaveAsync(Stream fileStream, string fileName)
+    public async Task<File?> UploadAndSaveAsync(Stream fileStream, string fileName, FileType type)
     {
         try
         {
             var storageService = serviceProvider.GetRequiredService<StorageService>();
             var file = await storageService.UploadFileAsync(fileStream, fileName);
+            file.Type = type;
+            
+            if (file == null)
+                return null;
 
+            return await SaveFileAsync(file);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao fazer upload e salvar arquivo: {ex.Message}", ex);
+        }
+    }
+    
+    /// <summary>
+    /// Faz upload de arquivo e salva no banco (operação completa)
+    /// </summary>
+    public async Task<File?> UploadContractAndSaveAsync(Stream fileStream, string fileName, FileType type)
+    {
+        try
+        {
+            var storageService = serviceProvider.GetRequiredService<StorageService>();
+            var file = await storageService.UploadFileAsync(fileStream, fileName, "contracts");
+            file.Type = type;
+            
             if (file == null)
                 return null;
 
