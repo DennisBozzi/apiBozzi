@@ -9,6 +9,7 @@ public class Contract
 {
     [Key] public int Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
+    public DateTime ValidSince { get; set; }
     public DateTime ValidUntil { get; set; }
     public int PaymnetDay { get; set; }
     public StatusContract Status { get; set; }
@@ -26,6 +27,7 @@ public class Contract
 
     public Contract(NewContract dto)
     {
+        ValidSince = dto.ValidSince;
         ValidUntil = dto.ValidUntil;
         PaymnetDay = dto.PaymnetDay;
         Tenant = dto.Tenant;

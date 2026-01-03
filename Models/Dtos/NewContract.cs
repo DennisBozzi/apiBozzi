@@ -5,6 +5,7 @@ namespace apiBozzi.Models.Dtos;
 
 public class NewContract
 {
+    public DateTime ValidSince { get; set; }
     public DateTime ValidUntil { get; set; }
     public int PaymnetDay { get; set; }
     public int TenantId { get; set; }

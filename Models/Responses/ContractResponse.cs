@@ -7,6 +7,7 @@ public class ContractResponse
 {
     public int Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
+    public DateTime ValidSince { get; set; }
     public DateTime ValidUntil { get; set; }
     public int PaymnetDay { get; set; }
     public StatusContract Status { get; set; }
@@ -19,6 +20,7 @@ public class ContractResponse
     {
         Id = contract.Id;
         CreatedAt = contract.CreatedAt;
+        ValidSince = contract.ValidSince;
         ValidUntil = contract.ValidUntil;
         PaymnetDay = contract.PaymnetDay;
         Status = contract.Status;
