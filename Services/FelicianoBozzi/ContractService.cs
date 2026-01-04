@@ -27,21 +27,22 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         return new ContractResponse(contract);
     }
 
-    public async Task<List<ContractResponse>> GetContractsByUnit(int id, bool isActive = false)
+    public async Task<ContractResponse> GetContractByUnit(int id)
     {
-        var contracts = isActive
-            ? await Context.Contracts
-                .Where(x => x.Unit.Id == id && x.Status == StatusContract.Active)
-                .ToListAsync()
-            : await Context.Contracts
-                .Where(x => x.Unit.Id == id).ToListAsync();
+        var contract = await GetValidContractByUnit(id);
 
-        var res = contracts.Select(x => new ContractResponse(x)).ToList();
+        if (contract is not null)
+            return new ContractResponse(contract);
+
+        var res = new ContractResponse()
+        {
+            Unit = new UnitResponse(await Context.Units.FindAsync(id))
+        };
 
         return res;
     }
 
-    public async Task<List<ContractResponse>> GetContractsByTenant(int id, bool isActive = false)
+    public async Task<List<ContractResponse>> GetContractsByTenant(int id, bool isActive = true)
     {
         var contracts = isActive
             ? await Context.Contracts
@@ -55,6 +56,23 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         return res;
     }
 
+    public async Task<List<UnitResponse>> FillContracts(List<UnitResponse> units)
+    {
+        var today = DateTime.Today.ToUniversalTime();
+        foreach (var unit in units)
+        {
+            var contract = await Context.Contracts
+                .FirstOrDefaultAsync(x => x.Unit.Id == unit.Id &&
+                                          x.Status == StatusContract.Active &&
+                                          x.ValidUntil > today);
+
+            if (contract is not null)
+                unit.FillContract(contract);
+        }
+
+        return units;
+    }
+
     public async Task<ContractResponse> NewContract(NewContract dto)
     {
         dto.Tenant = await Context.Tenants.FirstOrDefaultAsync(x => x.Id == dto.TenantId);
@@ -65,11 +83,10 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
 
         ValidateContract(dto);
 
-        var contract = new Contract(dto)
-        {
-            Status = StatusContract.Active,
-            File = await FillContractFile(dto)
-        };
+        var contract = new Contract(dto);
+
+        contract.Status = StatusContract.Active;
+        contract.File = await FillContractFile(dto);
 
         Context.Contracts.Add(contract);
 
@@ -147,6 +164,17 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         return (filledFileName, outputStream);
     }
 
+    private async Task<Contract?> GetValidContractByUnit(int id)
+    {
+        var today = DateTime.Today.ToUniversalTime();
+
+        return await Context.Contracts
+            .FirstOrDefaultAsync(x =>
+                x.Unit.Id == id &&
+                x.ValidUntil > today &&
+                x.Status == StatusContract.Active);
+    }
+
     #endregion
 
     #region Private
@@ -164,7 +192,7 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         var storageService = ServiceProvider.GetRequiredService<StorageService>();
         using var sourceStream = await storageService.GetFileStreamAsync(model.IdStorage);
         using var document = DocX.Load(sourceStream);
-        
+
         var extenso = new Extenso();
         var escrever = extenso
             .Escrever(OpcoesPredefinidas.Predefinicoes[Predefinicoes.Cardinais]);
@@ -192,10 +220,10 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
             { "{merried}", maritalStatus },
             { "{ap}", dto.Unit.Number },
             { "{cpf}", dto.Tenant.Cpf },
-            { "{validSince}", dto.Contract.ValidSince.ToString("dd/MM/yyyy") },
-            { "{validUntil}", dto.Contract.ValidUntil.ToString("dd/MM/yyyy") },
-            { "{rent}", dto.Contract.Rent.ToString("C") },
-            { "{rentWorld}", escrever.Numero(dto.Contract.Rent) }
+            { "{validSince}", dto.ValidSince.ToString("dd/MM/yyyy") },
+            { "{validUntil}", dto.ValidUntil.ToString("dd/MM/yyyy") },
+            { "{rent}", dto.Rent.ToString("C") },
+            { "{rentWorld}", escrever.Numero(dto.Rent) }
         };
 
         foreach (var (placeholder, replacement) in replacements)
@@ -222,7 +250,7 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         var today = DateTime.Today;
 
         var hasActiveContract = dto.Contract is not null &&
-                                today < dto.Contract.ValidSince &&
+                                today < dto.Contract.ValidUntil &&
                                 dto.Contract.Status == StatusContract.Active;
 
         if (hasActiveContract)

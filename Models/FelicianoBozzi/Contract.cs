@@ -11,7 +11,7 @@ public class Contract
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
     public DateTime ValidSince { get; set; }
     public DateTime ValidUntil { get; set; }
-    public int PaymnetDay { get; set; }
+    public int PaymentDay { get; set; }
     public StatusContract Status { get; set; }
     public File? File { get; set; }
     [Required] public Tenant Tenant { get; set; }
@@ -29,7 +29,7 @@ public class Contract
     {
         ValidSince = dto.ValidSince;
         ValidUntil = dto.ValidUntil;
-        PaymnetDay = dto.PaymentDay;
+        PaymentDay = dto.PaymentDay;
         Tenant = dto.Tenant;
         Unit = dto.Unit;
         Rent = dto.Rent;

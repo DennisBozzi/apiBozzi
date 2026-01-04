@@ -39,7 +39,7 @@ public class UnitController : ControllerBase
     {
         try
         {
-            return Ok(await _contract.GetContractsByUnit(id, active));
+            return Ok(await _contract.GetContractByUnit(id));
         }
         catch (Exception e)
         {

@@ -9,12 +9,16 @@ public class ContractResponse
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
     public DateTime ValidSince { get; set; }
     public DateTime ValidUntil { get; set; }
-    public int PaymnetDay { get; set; }
+    public int PaymentDay { get; set; }
     public StatusContract Status { get; set; }
     public File? File { get; set; }
-    public Tenant? Tenant { get; set; }
-    public Unit? Unit { get; set; }
+    public TenantResponse? Tenant { get; set; }
+    public UnitResponse? Unit { get; set; }
     public decimal Rent { get; set; }
+
+    public ContractResponse()
+    {
+    }
 
     public ContractResponse(Contract contract)
     {
@@ -22,11 +26,11 @@ public class ContractResponse
         CreatedAt = contract.CreatedAt;
         ValidSince = contract.ValidSince;
         ValidUntil = contract.ValidUntil;
-        PaymnetDay = contract.PaymnetDay;
+        PaymentDay = contract.PaymentDay;
         Status = contract.Status;
         File = contract.File;
-        Tenant = contract.Tenant;
-        Unit = contract.Unit;
+        Tenant = new TenantResponse(contract.Tenant);
+        Unit = new UnitResponse(contract.Unit);
         Rent = contract.Rent;
     }
 }

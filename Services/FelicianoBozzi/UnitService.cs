@@ -28,10 +28,11 @@ public class UnitService(IServiceProvider serviceProvider) : ServiceBase(service
             .OrderBy(x => x.Number)
             .Select(x => new UnitResponse(x));
 
-        //TODO: Retornar rent das unidades
-
         if (query.Any())
+        {
             units = await query.ToListAsync();
+            units = await ContractService.FillContracts(units);
+        }
 
         var res = new PagedResult<UnitResponse>
         {
