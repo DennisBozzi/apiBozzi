@@ -29,7 +29,7 @@ public class Contract
     {
         ValidSince = dto.ValidSince;
         ValidUntil = dto.ValidUntil;
-        PaymnetDay = dto.PaymnetDay;
+        PaymnetDay = dto.PaymentDay;
         Tenant = dto.Tenant;
         Unit = dto.Unit;
         Rent = dto.Rent;

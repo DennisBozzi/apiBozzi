@@ -28,13 +28,24 @@ public class ContractController : ControllerBase
             var contract = await _contracts.NewContract(dto);
             return Ok(contract);
         }
-        catch (ValidationException e)
+        catch (Exception e)
         {
             return BadRequest(e.Message);
         }
+    }
+    
+    [HttpGet]
+    [Transaction]
+    public async Task<IActionResult> GetContractById(int id)
+    {
+        try
+        {
+            var contract = await _contracts.GetContractById(id);
+            return Ok(contract);
+        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 
@@ -47,13 +58,9 @@ public class ContractController : ControllerBase
             var res = await _contracts.NewModel(file);
             return Ok(res);
         }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
-        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 
@@ -65,13 +72,9 @@ public class ContractController : ControllerBase
             var res = await _contracts.GetModel();
             return Ok(res);
         }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
-        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 
@@ -83,13 +86,9 @@ public class ContractController : ControllerBase
             var (fileName, stream) = await _contracts.FillModelAsync(request);
             return File(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
-        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 }

@@ -12,4 +12,5 @@ public class NewTenant
     [Required] public Gender Gender { get; set; }
     public DateTime? Born { get; set; }
     public string? Phone { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
 }

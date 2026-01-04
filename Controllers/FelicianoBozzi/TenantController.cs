@@ -13,10 +13,12 @@ namespace apiBozzi.Controllers.FelicianoBozzi;
 public class TenantController : ControllerBase
 {
     private readonly TenantService _tenants;
+    private readonly ContractService _contract;
 
-    public TenantController(TenantService tenants)
+    public TenantController(TenantService tenants, ContractService contract)
     {
         _tenants = tenants;
+        _contract = contract;
     }
 
     [HttpGet]
@@ -29,10 +31,23 @@ public class TenantController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
-    
+
+    [HttpGet("{id:int}/Contracts")]
+    public async Task<IActionResult> GetContract(int id, bool active)
+    {
+        try
+        {
+            return Ok(await _contract.GetContractsByTenant(id, active));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpPost]
     [Transaction]
     public async Task<IActionResult> AddTenant([FromBody] NewTenant dto)
@@ -42,13 +57,9 @@ public class TenantController : ControllerBase
             var tenant = await _tenants.AddTenant(dto);
             return Ok(tenant);
         }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
-        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 
@@ -65,7 +76,7 @@ public class TenantController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Server error: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 }

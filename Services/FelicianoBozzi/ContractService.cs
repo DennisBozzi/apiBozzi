@@ -7,6 +7,9 @@ using apiBozzi.Models.Responses;
 using apiBozzi.Services.Firebase;
 using Microsoft.EntityFrameworkCore;
 using Xceed.Words.NET;
+using File = apiBozzi.Models.File;
+using NumerosExtensos;
+using NumerosExtensos.Enums;
 
 namespace apiBozzi.Services.FelicianoBozzi;
 
@@ -14,17 +17,59 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
 {
     #region Main
 
+    public async Task<ContractResponse> GetContractById(int id)
+    {
+        var contract = await Context.Contracts.FindAsync(id);
+
+        if (contract is null)
+            throw new ValidationException("Contract not found.");
+
+        return new ContractResponse(contract);
+    }
+
+    public async Task<List<ContractResponse>> GetContractsByUnit(int id, bool isActive = false)
+    {
+        var contracts = isActive
+            ? await Context.Contracts
+                .Where(x => x.Unit.Id == id && x.Status == StatusContract.Active)
+                .ToListAsync()
+            : await Context.Contracts
+                .Where(x => x.Unit.Id == id).ToListAsync();
+
+        var res = contracts.Select(x => new ContractResponse(x)).ToList();
+
+        return res;
+    }
+
+    public async Task<List<ContractResponse>> GetContractsByTenant(int id, bool isActive = false)
+    {
+        var contracts = isActive
+            ? await Context.Contracts
+                .Where(x => x.Tenant.Id == id && x.Status == StatusContract.Active)
+                .ToListAsync()
+            : await Context.Contracts
+                .Where(x => x.Tenant.Id == id).ToListAsync();
+
+        var res = contracts.Select(x => new ContractResponse(x)).ToList();
+
+        return res;
+    }
+
     public async Task<ContractResponse> NewContract(NewContract dto)
     {
         dto.Tenant = await Context.Tenants.FirstOrDefaultAsync(x => x.Id == dto.TenantId);
         dto.Unit = await Context.Units.FirstOrDefaultAsync(x => x.Id == dto.UnitId);
+        dto.Contract = await Context.Contracts
+            .OrderByDescending(x => x.CreatedAt)
+            .FirstOrDefaultAsync(x => x.Unit == dto.Unit);
 
         ValidateContract(dto);
 
-        var contract = new Contract(dto);
-        contract.Status = StatusContract.Active;
-
-        // TODO: Criar e salvar o contrato (File)
+        var contract = new Contract(dto)
+        {
+            Status = StatusContract.Active,
+            File = await FillContractFile(dto)
+        };
 
         Context.Contracts.Add(contract);
 
@@ -36,15 +81,15 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         ValidateNewModel(file);
 
         var res = new ContractModelResponse();
-        
+
         res.File = await FileService
             .UploadContractAndSaveAsync(file.OpenReadStream(), file.FileName, FileType.ModelContract);
-        
+
         if (res.File is null)
             return res;
-        
+
         res.Params = await ExtractPlaceholdersAsync(res.File.IdStorage);
-        
+
         return res;
     }
 
@@ -106,6 +151,66 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
 
     #region Private
 
+    private async Task<File> FillContractFile(NewContract dto)
+    {
+        var model = await Context.Files
+            .Where(x => x.Type == FileType.ModelContract)
+            .OrderByDescending(x => x.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        if (model is null)
+            throw new ValidationException("No contract model is available.");
+
+        var storageService = ServiceProvider.GetRequiredService<StorageService>();
+        using var sourceStream = await storageService.GetFileStreamAsync(model.IdStorage);
+        using var document = DocX.Load(sourceStream);
+        
+        var extenso = new Extenso();
+        var escrever = extenso
+            .Escrever(OpcoesPredefinidas.Predefinicoes[Predefinicoes.Cardinais]);
+
+        var genderSuffix = dto.Tenant.Gender switch
+        {
+            Gender.Male => "brasileiro",
+            Gender.Female => "brasileira",
+            _ => "brasileiro(a)"
+        };
+
+        var maritalStatus = dto.Tenant.MaritalStatus switch
+        {
+            MaritalStatus.Single => "solteir" + (dto.Tenant.Gender == Gender.Female ? "a" : "o"),
+            MaritalStatus.Married => "casad" + (dto.Tenant.Gender == Gender.Female ? "a" : "o"),
+            MaritalStatus.Widowed => "viúv" + (dto.Tenant.Gender == Gender.Female ? "a" : "o"),
+            _ => "solteir" + (dto.Tenant.Gender == Gender.Female ? "a" : "o")
+        };
+
+        var replacements = new Dictionary<string, string>
+        {
+            { "{firstName}", dto.Tenant.FirstName },
+            { "{lastName}", dto.Tenant.LastName },
+            { "{brazilian}", genderSuffix },
+            { "{merried}", maritalStatus },
+            { "{ap}", dto.Unit.Number },
+            { "{cpf}", dto.Tenant.Cpf },
+            { "{validSince}", dto.Contract.ValidSince.ToString("dd/MM/yyyy") },
+            { "{validUntil}", dto.Contract.ValidUntil.ToString("dd/MM/yyyy") },
+            { "{rent}", dto.Contract.Rent.ToString("C") },
+            { "{rentWorld}", escrever.Numero(dto.Contract.Rent) }
+        };
+
+        foreach (var (placeholder, replacement) in replacements)
+            document.ReplaceText(placeholder, replacement);
+
+        var outputStream = new MemoryStream();
+        document.SaveAs(outputStream);
+        outputStream.Position = 0;
+
+        var fileName = $"Contract_{dto.Tenant.Id}_{DateTime.Now:yyyyMMddHHmmss}.docx";
+        var file = await FileService.UploadContractAndSaveAsync(outputStream, fileName, FileType.Contract);
+
+        return file;
+    }
+
     private void ValidateContract(NewContract dto)
     {
         if (dto.Tenant is null)
@@ -113,6 +218,15 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
 
         if (dto.Unit is null)
             throw new ValidationException("No unit found with this identifier.");
+
+        var today = DateTime.Today;
+
+        var hasActiveContract = dto.Contract is not null &&
+                                today < dto.Contract.ValidSince &&
+                                dto.Contract.Status == StatusContract.Active;
+
+        if (hasActiveContract)
+            throw new ValidationException("The unit has an contract.");
     }
 
     private void ValidateNewModel(IFormFile file)

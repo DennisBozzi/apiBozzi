@@ -15,6 +15,7 @@ public class TenantResponse
     public string? Phone { get; set; }
     public DateTime? Born { get; set; }
     public Gender? Gender { get; set; }
+    public MaritalStatus? MaritialStatus { get; set; }
 
     public TenantResponse(Tenant value)
     {
@@ -27,5 +28,6 @@ public class TenantResponse
         Phone = value.Phone;
         Born = value.Born;
         Gender = value.Gender;
+        MaritialStatus = value.MaritalStatus;
     }
 }

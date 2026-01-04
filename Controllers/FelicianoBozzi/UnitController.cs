@@ -13,10 +13,12 @@ namespace apiBozzi.Controllers.FelicianoBozzi;
 public class UnitController : ControllerBase
 {
     private readonly UnitService _unit;
+    private readonly ContractService _contract;
 
-    public UnitController(UnitService unit)
+    public UnitController(UnitService unit, ContractService contract)
     {
         _unit = unit;
+        _contract = contract;
     }
 
     [HttpGet]
@@ -26,13 +28,22 @@ public class UnitController : ControllerBase
         {
             return Ok(await _unit.ListUnits(unitFilter));
         }
-        catch (ValidationException e)
+        catch (Exception e)
         {
             return BadRequest(e.Message);
         }
+    }
+
+    [HttpGet("{id:int}/Contracts")]
+    public async Task<IActionResult> GetContract(int id, bool active)
+    {
+        try
+        {
+            return Ok(await _contract.GetContractsByUnit(id, active));
+        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 
@@ -47,13 +58,9 @@ public class UnitController : ControllerBase
 
             return Ok(uni);
         }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
-        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 
@@ -65,13 +72,9 @@ public class UnitController : ControllerBase
         {
             return Ok(await _unit.AddUnit(value));
         }
-        catch (ValidationException e)
-        {
-            return BadRequest(e.Message);
-        }
         catch (Exception e)
         {
-            return StatusCode(500, $"Erro interno do servidor: ${e.Message}");
+            return BadRequest(e.Message);
         }
     }
 }
