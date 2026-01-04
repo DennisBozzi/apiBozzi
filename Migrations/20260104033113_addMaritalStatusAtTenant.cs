@@ -13,7 +13,7 @@ namespace apiBozzi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "MartialStatus",
+                name: "MaritalStatus",
                 table: "Tenants",
                 type: "integer",
                 nullable: false,
@@ -23,7 +23,7 @@ namespace apiBozzi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "MartialStatus",
+                name: "MaritalStatus",
                 table: "Tenants");
         }
     }
