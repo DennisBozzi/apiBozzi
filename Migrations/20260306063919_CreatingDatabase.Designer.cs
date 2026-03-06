@@ -12,7 +12,7 @@ using apiBozzi.Context;
 namespace apiBozzi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260306061125_CreatingDatabase")]
+    [Migration("20260306063919_CreatingDatabase")]
     partial class CreatingDatabase
     {
         /// <inheritdoc />
