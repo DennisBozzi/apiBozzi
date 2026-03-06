@@ -1,0 +1,352 @@
+[
+    {
+        "firstName": "Ana",
+        "lastName": "Silva",
+        "cpf": "59016499741",
+        "email": "ana.silva@example.com",
+        "gender": 2,
+        "born": "1990-05-12T00:00:00Z",
+        "phone": "11987654321",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Bruno",
+        "lastName": "Costa",
+        "cpf": "61556835574",
+        "email": "bruno.costa@example.com",
+        "gender": 1,
+        "born": "1985-08-20T00:00:00Z",
+        "phone": "11987654322",
+        "maritalStatus": 3
+    },
+    {
+        "firstName": "Carlos",
+        "lastName": "Oliveira",
+        "cpf": "20560403526",
+        "email": "carlos.oliveira@example.com",
+        "gender": 1,
+        "born": "1992-01-15T00:00:00Z",
+        "phone": "11987654323",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Daniela",
+        "lastName": "Souza",
+        "cpf": "22565040008",
+        "email": "daniela.souza@example.com",
+        "gender": 2,
+        "born": "1988-11-30T00:00:00Z",
+        "phone": "11987654324",
+        "maritalStatus": 3
+    },
+    {
+        "firstName": "Eduardo",
+        "lastName": "Rodrigues",
+        "cpf": "50823523691",
+        "email": "eduardo.rodrigues@example.com",
+        "gender": 1,
+        "born": "1975-04-05T00:00:00Z",
+        "phone": "11987654325",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Fernanda",
+        "lastName": "Alves",
+        "cpf": "93016846160",
+        "email": "fernanda.alves@example.com",
+        "gender": 2,
+        "born": "1995-07-22T00:00:00Z",
+        "phone": "11987654326",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Gustavo",
+        "lastName": "Pereira",
+        "cpf": "22267218860",
+        "email": "gustavo.pereira@example.com",
+        "gender": 1,
+        "born": "1980-09-18T00:00:00Z",
+        "phone": "11987654327",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Helena",
+        "lastName": "Lima",
+        "cpf": "98859038014",
+        "email": "helena.lima@example.com",
+        "gender": 2,
+        "born": "1993-02-14T00:00:00Z",
+        "phone": "11987654328",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Igor",
+        "lastName": "Gomes",
+        "cpf": "06296945248",
+        "email": "igor.gomes@example.com",
+        "gender": 1,
+        "born": "1986-12-01T00:00:00Z",
+        "phone": "11987654329",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Julia",
+        "lastName": "Ribeiro",
+        "cpf": "80084491108",
+        "email": "julia.ribeiro@example.com",
+        "gender": 2,
+        "born": "1991-03-25T00:00:00Z",
+        "phone": "11987654330",
+        "maritalStatus": 3
+    },
+    {
+        "firstName": "Lucas",
+        "lastName": "Martins",
+        "cpf": "36152690633",
+        "email": "lucas.martins@example.com",
+        "gender": 1,
+        "born": "1989-10-10T00:00:00Z",
+        "phone": "11987654331",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Mariana",
+        "lastName": "Carvalho",
+        "cpf": "52549805674",
+        "email": "mariana.carvalho@example.com",
+        "gender": 2,
+        "born": "1994-06-08T00:00:00Z",
+        "phone": "11987654332",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Nicolas",
+        "lastName": "Almeida",
+        "cpf": "10679694382",
+        "email": "nicolas.almeida@example.com",
+        "gender": 1,
+        "born": "1987-08-30T00:00:00Z",
+        "phone": "11987654333",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Olivia",
+        "lastName": "Lopes",
+        "cpf": "86316009208",
+        "email": "olivia.lopes@example.com",
+        "gender": 2,
+        "born": "1996-04-12T00:00:00Z",
+        "phone": "11987654334",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Pedro",
+        "lastName": "Soares",
+        "cpf": "71616683600",
+        "email": "pedro.soares@example.com",
+        "gender": 1,
+        "born": "1982-11-05T00:00:00Z",
+        "phone": "11987654335",
+        "maritalStatus": 3
+    },
+    {
+        "firstName": "Quintino",
+        "lastName": "Fernandes",
+        "cpf": "30618130802",
+        "email": "quintino.fernandes@example.com",
+        "gender": 1,
+        "born": "1978-01-20T00:00:00Z",
+        "phone": "11987654336",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Roberta",
+        "lastName": "Vieira",
+        "cpf": "45197444827",
+        "email": "roberta.vieira@example.com",
+        "gender": 2,
+        "born": "1990-09-15T00:00:00Z",
+        "phone": "11987654337",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Samuel",
+        "lastName": "Barbosa",
+        "cpf": "49114371383",
+        "email": "samuel.barbosa@example.com",
+        "gender": 1,
+        "born": "1985-05-25T00:00:00Z",
+        "phone": "11987654338",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Tatiana",
+        "lastName": "Rocha",
+        "cpf": "83077273675",
+        "email": "tatiana.rocha@example.com",
+        "gender": 2,
+        "born": "1992-12-10T00:00:00Z",
+        "phone": "11987654339",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Ulysses",
+        "lastName": "Dias",
+        "cpf": "82694416004",
+        "email": "ulysses.dias@example.com",
+        "gender": 1,
+        "born": "1980-03-08T00:00:00Z",
+        "phone": "11987654340",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Vanessa",
+        "lastName": "Nascimento",
+        "cpf": "37778905108",
+        "email": "vanessa.nascimento@example.com",
+        "gender": 2,
+        "born": "1995-08-18T00:00:00Z",
+        "phone": "11987654341",
+        "maritalStatus": 3
+    },
+    {
+        "firstName": "Wagner",
+        "lastName": "Andrade",
+        "cpf": "77727347787",
+        "email": "wagner.andrade@example.com",
+        "gender": 1,
+        "born": "1988-02-28T00:00:00Z",
+        "phone": "11987654342",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Ximena",
+        "lastName": "Moreira",
+        "cpf": "73666905978",
+        "email": "ximena.moreira@example.com",
+        "gender": 2,
+        "born": "1991-07-05T00:00:00Z",
+        "phone": "11987654343",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Yuri",
+        "lastName": "Nunes",
+        "cpf": "11860152333",
+        "email": "yuri.nunes@example.com",
+        "gender": 1,
+        "born": "1986-11-22T00:00:00Z",
+        "phone": "11987654344",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Zelia",
+        "lastName": "Marques",
+        "cpf": "81911243942",
+        "email": "zelia.marques@example.com",
+        "gender": 2,
+        "born": "1994-01-14T00:00:00Z",
+        "phone": "11987654345",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Alexandre",
+        "lastName": "Machado",
+        "cpf": "36640693313",
+        "email": "alexandre.machado@example.com",
+        "gender": 1,
+        "born": "1983-04-19T00:00:00Z",
+        "phone": "11987654346",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Bianca",
+        "lastName": "Freitas",
+        "cpf": "42653568934",
+        "email": "bianca.freitas@example.com",
+        "gender": 2,
+        "born": "1997-09-02T00:00:00Z",
+        "phone": "11987654347",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Caio",
+        "lastName": "Mendes",
+        "cpf": "29841338629",
+        "email": "caio.mendes@example.com",
+        "gender": 1,
+        "born": "1989-06-11T00:00:00Z",
+        "phone": "11987654348",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Diana",
+        "lastName": "Oliveira",
+        "cpf": "60416551980",
+        "email": "diana.oliveira@example.com",
+        "gender": 2,
+        "born": "1992-10-27T00:00:00Z",
+        "phone": "11987654349",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Erick",
+        "lastName": "Silva",
+        "cpf": "34983200339",
+        "email": "erick.silva@example.com",
+        "gender": 1,
+        "born": "1984-12-05T00:00:00Z",
+        "phone": "11987654350",
+        "maritalStatus": 3
+    },
+    {
+        "firstName": "Fabiola",
+        "lastName": "Santos",
+        "cpf": "04577495473",
+        "email": "fabiola.santos@example.com",
+        "gender": 2,
+        "born": "1996-03-31T00:00:00Z",
+        "phone": "11987654351",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Gabriel",
+        "lastName": "Costa",
+        "cpf": "44562806974",
+        "email": "gabriel.costa@example.com",
+        "gender": 1,
+        "born": "1987-07-24T00:00:00Z",
+        "phone": "11987654352",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Heloisa",
+        "lastName": "Rodrigues",
+        "cpf": "89082561212",
+        "email": "heloisa.rodrigues@example.com",
+        "gender": 2,
+        "born": "1993-11-16T00:00:00Z",
+        "phone": "11987654353",
+        "maritalStatus": 1
+    },
+    {
+        "firstName": "Icaro",
+        "lastName": "Pereira",
+        "cpf": "71098549902",
+        "email": "icaro.pereira@example.com",
+        "gender": 1,
+        "born": "1981-02-09T00:00:00Z",
+        "phone": "11987654354",
+        "maritalStatus": 2
+    },
+    {
+        "firstName": "Jessica",
+        "lastName": "Gomes",
+        "cpf": "79342925545",
+        "email": "jessica.gomes@example.com",
+        "gender": 2,
+        "born": "1998-05-28T00:00:00Z",
+        "phone": "11987654355",
+        "maritalStatus": 1
+    }
+]
