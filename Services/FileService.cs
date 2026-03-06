@@ -1,5 +1,4 @@
-﻿using apiBozzi.Models;
-using apiBozzi.Models.Enums;
+﻿using apiBozzi.Models.Enums;
 using apiBozzi.Services.Firebase;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,11 +28,19 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
     /// <summary>
     /// Recupera um arquivo do banco de dados pelo ID
     /// </summary>
-    public async Task<File?> GetFileByIdAsync(int fileId)
+    public async Task<File?> GetFileByIdAsync(int fileId, bool withUrl = false)
     {
         try
         {
-            return await Context.Files?.FirstOrDefaultAsync(f => f.Id == fileId)!;
+            var file = await Context.Files?.FirstOrDefaultAsync(f => f.Id == fileId)!;
+
+            if (file is null)
+                return null;
+
+            if (withUrl)
+                file.Url = await GetDownloadUrlAsync(file);
+
+            return file;
         }
         catch (Exception ex)
         {
@@ -44,11 +51,18 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
     /// <summary>
     /// Recupera um arquivo pelo ID de storage (Firebase)
     /// </summary>
-    public async Task<File?> GetFileByIdStorageAsync(string idStorage)
+    public async Task<File?> GetFileByIdStorageAsync(string idStorage, bool withUrl = false)
     {
         try
         {
-            return await Context.Files.FirstOrDefaultAsync(f => f.IdStorage == idStorage)!;
+            var file = await Context.Files.FirstOrDefaultAsync(f => f.IdStorage == idStorage)!;
+            if (file is null)
+                return null;
+
+            if (withUrl)
+                file.Url = await GetDownloadUrlAsync(file);
+
+            return file;
         }
         catch (Exception ex)
         {
@@ -104,7 +118,7 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
             var storageService = serviceProvider.GetRequiredService<StorageService>();
             var file = await storageService.UploadFileAsync(fileStream, fileName);
             file.Type = type;
-            
+
             if (file == null)
                 return null;
 
@@ -115,7 +129,7 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
             throw new Exception($"Erro ao fazer upload e salvar arquivo: {ex.Message}", ex);
         }
     }
-    
+
     /// <summary>
     /// Faz upload de arquivo e salva no banco (operação completa)
     /// </summary>
@@ -126,7 +140,7 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
             var storageService = serviceProvider.GetRequiredService<StorageService>();
             var file = await storageService.UploadFileAsync(fileStream, fileName, "contracts");
             file.Type = type;
-            
+
             if (file == null)
                 return null;
 
@@ -203,6 +217,22 @@ public class FileService(IServiceProvider serviceProvider) : ServiceBase(service
             if (file == null)
                 return null;
 
+            var storageService = serviceProvider.GetRequiredService<StorageService>();
+            return await storageService.GetDownloadUrlAsync(file.IdStorage);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao obter URL de download: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Recupera a URL de download do arquivo
+    /// </summary>
+    public async Task<string> GetDownloadUrlAsync(File file)
+    {
+        try
+        {
             var storageService = serviceProvider.GetRequiredService<StorageService>();
             return await storageService.GetDownloadUrlAsync(file.IdStorage);
         }

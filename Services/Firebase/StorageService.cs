@@ -1,7 +1,5 @@
-﻿﻿using apiBozzi.Models;
-using apiBozzi.Utils;
+﻿using apiBozzi.Utils;
 using Firebase.Storage;
-using System.IO;
 
 namespace apiBozzi.Services.Firebase;
 
@@ -17,8 +15,7 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
         {
             if (string.IsNullOrWhiteSpace(_bucketName))
             {
-                throw new InvalidOperationException(
-                    "The FIREBASE_STORAGE_BUCKET environment variable is not configured.");
+                throw new InvalidOperationException("The BUCKET environment variable is not configured.");
             }
 
             return _bucketName;
@@ -38,7 +35,7 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
         var token = UserProvider.AuthToken;
         if (string.IsNullOrWhiteSpace(token))
         {
-            throw new InvalidOperationException("Usuário não autenticado: cabeçalho Authorization ausente ou inválido.");
+            throw new InvalidOperationException("Usuário não autenticado.");
         }
 
         return token;
@@ -146,7 +143,7 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
     /// <summary>
     /// Obtém a URL de download de um arquivo do Firebase Storage
     /// </summary>
-    public async Task<string?> GetDownloadUrlAsync(string idStorage)
+    public async Task<string> GetDownloadUrlAsync(string idStorage)
     {
         try
         {
