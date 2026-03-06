@@ -11,6 +11,7 @@ public class Contract
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
     public DateTime ValidSince { get; set; }
     public DateTime ValidUntil { get; set; }
+    public DateTime EndedAt { get; set; }
     public int PaymentDay { get; set; }
     public StatusContract Status { get; set; }
     public File? File { get; set; }

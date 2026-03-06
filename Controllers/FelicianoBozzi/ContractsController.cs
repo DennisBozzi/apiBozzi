@@ -48,6 +48,40 @@ public class ContractController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpPost("{unitId}/End")]
+    [Transaction]
+    public async Task<IActionResult> EndContract(int unitId)
+    {
+        try
+        {
+            var unit = await _contracts.EndContract(unitId);
+            if (unit is null) return NotFound();
+
+            return Ok(unit);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPost("renew")]
+    [Transaction]
+    public async Task<IActionResult> RenewContract([FromBody] NewContract dto)
+    {
+        try
+        {
+            var unit = await _contracts.RenewContract(dto);
+            if (unit is null) return NotFound();
+
+            return Ok(unit);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
     [HttpPost("Model")]
     [Transaction]

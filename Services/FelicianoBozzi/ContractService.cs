@@ -34,12 +34,7 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         if (contract is not null)
             return new ContractResponse(contract);
 
-        var res = new ContractResponse()
-        {
-            Unit = new UnitResponse(await Context.Units.FindAsync(id))
-        };
-
-        return res;
+        return new ContractResponse(await Context.Units.FindAsync(id));
     }
 
     public async Task<List<ContractResponse>> GetContractsByTenant(int id, bool isActive = true)
@@ -91,6 +86,27 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         Context.Contracts.Add(contract);
 
         return new ContractResponse(contract);
+    }
+
+    public async Task<ContractResponse?> EndContract(int unitId)
+    {
+        var contract = await GetValidContractByUnit(unitId);
+
+        if (contract is null)
+            return null;
+
+        contract.EndedAt = DateTime.Now.ToUniversalTime();
+        contract.Status = StatusContract.Canceled;
+
+        return new ContractResponse(await Context.Units.FindAsync(unitId));
+    }
+
+    public async Task<ContractResponse?> RenewContract(NewContract dto)
+    {
+        var endRes = await EndContract(dto.UnitId);
+        if (endRes is null) return null;
+        
+        return await NewContract(dto);
     }
 
     public async Task<ContractModelResponse> NewModel(IFormFile file)
@@ -164,20 +180,18 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
         return (filledFileName, outputStream);
     }
 
-    private async Task<Contract?> GetValidContractByUnit(int id)
-    {
-        var today = DateTime.Today.ToUniversalTime();
-
-        return await Context.Contracts
-            .FirstOrDefaultAsync(x =>
-                x.Unit.Id == id &&
-                x.ValidUntil > today &&
-                x.Status == StatusContract.Active);
-    }
-
     #endregion
 
     #region Private
+
+    private async Task<Contract?> GetValidContractByUnit(int id)
+    {
+        return await Context.Contracts
+            .FirstOrDefaultAsync(x =>
+                x.Unit.Id == id &&
+                x.Status == StatusContract.Active);
+    }
+
 
     private async Task<File> FillContractFile(NewContract dto)
     {
