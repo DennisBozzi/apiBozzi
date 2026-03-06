@@ -143,13 +143,13 @@ public class StorageService(IServiceProvider serviceProvider) : ServiceBase(serv
     /// <summary>
     /// Obtém a URL de download de um arquivo do Firebase Storage
     /// </summary>
-    public async Task<string> GetDownloadUrlAsync(string idStorage)
+    public async Task<string> GetDownloadUrlAsync(string idStorage, string path = "contracts")
     {
         try
         {
             var storage = CreateStorage(EnsureAuthToken());
             var link = await storage
-                .Child("contracts")
+                .Child(path)
                 .Child(idStorage)
                 .GetDownloadUrlAsync();
 
