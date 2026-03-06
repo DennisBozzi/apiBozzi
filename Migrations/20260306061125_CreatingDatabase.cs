@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace apiBozzi.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatingDb : Migration
+    public partial class CreatingDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,8 @@ namespace apiBozzi.Migrations
                     Url = table.Column<string>(type: "text", nullable: false),
                     FileName = table.Column<string>(type: "text", nullable: false),
                     ContentType = table.Column<string>(type: "text", nullable: true),
-                    FileSize = table.Column<long>(type: "bigint", nullable: false)
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,6 +59,7 @@ namespace apiBozzi.Migrations
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Phone = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
                     Born = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    MaritalStatus = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -92,11 +94,13 @@ namespace apiBozzi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ValidSince = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ValidUntil = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymnetDay = table.Column<int>(type: "integer", nullable: false),
+                    EndedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentDay = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    FileId = table.Column<int>(type: "integer", nullable: false),
-                    ResponsibleId = table.Column<int>(type: "integer", nullable: false),
+                    FileId = table.Column<int>(type: "integer", nullable: true),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
                     UnitId = table.Column<int>(type: "integer", nullable: false),
                     Rent = table.Column<decimal>(type: "numeric(10,2)", nullable: false)
                 },
@@ -107,11 +111,10 @@ namespace apiBozzi.Migrations
                         name: "FK_Contracts_Files_FileId",
                         column: x => x.FileId,
                         principalTable: "Files",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Contracts_Tenants_ResponsibleId",
-                        column: x => x.ResponsibleId,
+                        name: "FK_Contracts_Tenants_TenantId",
+                        column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -129,9 +132,9 @@ namespace apiBozzi.Migrations
                 column: "FileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contracts_ResponsibleId",
+                name: "IX_Contracts_TenantId",
                 table: "Contracts",
-                column: "ResponsibleId");
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contracts_UnitId",

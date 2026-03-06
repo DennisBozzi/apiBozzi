@@ -12,8 +12,8 @@ using apiBozzi.Context;
 namespace apiBozzi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251231181612_addTypeToFile")]
-    partial class addTypeToFile
+    [Migration("20260306061125_CreatingDatabase")]
+    partial class CreatingDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,10 +36,13 @@ namespace apiBozzi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("EndedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int?>("FileId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PaymnetDay")
+                    b.Property<int>("PaymentDay")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Rent")
@@ -53,6 +56,9 @@ namespace apiBozzi.Migrations
 
                     b.Property<int>("UnitId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("ValidSince")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("ValidUntil")
                         .HasColumnType("timestamp with time zone");
@@ -138,6 +144,9 @@ namespace apiBozzi.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("MaritalStatus")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(15)
