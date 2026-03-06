@@ -50,7 +50,7 @@ public static class ServiceConfiguration
             options.AddPolicy("AllowSpecificOrigins", policy =>
             {
                 policy
-                    .WithOrigins("http://localhost:4200", "https://espbozzi.web.app")
+                    .WithOrigins("http://localhost:4200", "https://bozzis.com")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
