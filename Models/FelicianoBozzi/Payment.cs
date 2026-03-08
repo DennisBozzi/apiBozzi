@@ -10,10 +10,10 @@ public class Payment
     public DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
     public DateTime Competence { get; set; }
     public DateTime? PaidAt { get; set; }
-    public string Note { get; set; }
+    public string? Note { get; set; }
     public StatusPayment Status { get; set; }
     public PaymentType Type { get; set; }
-    [Required] private Contract Contract { get; set; }
+    [Required] public Contract Contract { get; set; }
 
     [Required]
     [Column(TypeName = "decimal(10,2)")]

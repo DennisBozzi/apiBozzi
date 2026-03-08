@@ -2,8 +2,9 @@
 
 public enum PaymentType
 {
-    Money = 1,
-    Pix = 2,
-    Credit = 3,
-    Debit = 4
+    None = 1,
+    Money = 2,
+    Pix = 3,
+    Credit = 4,
+    Debit = 5
 }

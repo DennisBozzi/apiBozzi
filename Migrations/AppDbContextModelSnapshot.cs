@@ -82,11 +82,13 @@ namespace apiBozzi.Migrations
                     b.Property<DateTime>("Competence")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("ContractId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("PaidAt")
@@ -102,6 +104,8 @@ namespace apiBozzi.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.ToTable("Payments");
                 });
@@ -241,6 +245,17 @@ namespace apiBozzi.Migrations
                     b.Navigation("Tenant");
 
                     b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("apiBozzi.Models.FelicianoBozzi.Payment", b =>
+                {
+                    b.HasOne("apiBozzi.Models.FelicianoBozzi.Contract", "Contract")
+                        .WithMany()
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contract");
                 });
 #pragma warning restore 612, 618
         }

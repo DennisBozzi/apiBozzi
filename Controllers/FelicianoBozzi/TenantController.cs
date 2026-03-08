@@ -10,23 +10,14 @@ namespace apiBozzi.Controllers.FelicianoBozzi;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class TenantController : ControllerBase
+public class TenantController(TenantService tenants, ContractService contract) : ControllerBase
 {
-    private readonly TenantService _tenants;
-    private readonly ContractService _contract;
-
-    public TenantController(TenantService tenants, ContractService contract)
-    {
-        _tenants = tenants;
-        _contract = contract;
-    }
-
     [HttpGet]
     public async Task<IActionResult> ListTenants([FromQuery] TenantFilter filter)
     {
         try
         {
-            var tenant = await _tenants.ListTenants(filter);
+            var tenant = await tenants.ListTenants(filter);
             return Ok(tenant);
         }
         catch (Exception e)
@@ -40,7 +31,7 @@ public class TenantController : ControllerBase
     {
         try
         {
-            return Ok(await _contract.GetContractsByTenant(id, active));
+            return Ok(await contract.GetContractsByTenant(id, active));
         }
         catch (Exception e)
         {
@@ -54,7 +45,7 @@ public class TenantController : ControllerBase
     {
         try
         {
-            var tenant = await _tenants.AddTenant(dto);
+            var tenant = await tenants.AddTenant(dto);
             return Ok(tenant);
         }
         catch (Exception e)
@@ -68,7 +59,7 @@ public class TenantController : ControllerBase
     {
         try
         {
-            var ten = await _tenants.GetTenantById(id);
+            var ten = await tenants.GetTenantById(id);
 
             if (ten == null) return NotFound();
 

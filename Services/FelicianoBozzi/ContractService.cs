@@ -82,9 +82,12 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
 
         contract.Status = StatusContract.Active;
         contract.File = await FillContractFile(dto);
-
+        
         Context.Contracts.Add(contract);
-
+        await Context.SaveChangesAsync();
+        
+        await PaymentService.CreatePaymentsByContract(contract.Id);
+        
         return new ContractResponse(contract);
     }
 
@@ -97,6 +100,9 @@ public class ContractService(IServiceProvider serviceProvider) : ServiceBase(ser
 
         contract.EndedAt = DateTime.Now.ToUniversalTime();
         contract.Status = StatusContract.Canceled;
+
+        await Context.SaveChangesAsync();
+        await PaymentService.CleanUpFutureUnpaidPayments(contract.Id, contract.EndedAt);
 
         return new ContractResponse(await Context.Units.FindAsync(unitId));
     }
